@@ -9,7 +9,7 @@ import time
 # api_key="this is an api key"
 # url="http://127.0.0.1:5005/v1/chat/completions"
 
-# api_key=open("C:\\Users\\15617\\.ssh\\openai.txt").read()
+# api_key=open("C:\\openai.txt").read()
 # url="https://api.openai.com/v1/chat/completions"
 
 _api_key,_url=None,None
