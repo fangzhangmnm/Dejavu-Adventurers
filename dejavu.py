@@ -11,7 +11,13 @@ ONGOING="ONGOING"
 
 def say(name,content):
     global selected_dialogue
-    selected_dialogue.append({"name": str(name), "content": content})
+    character=get_character_object(name)
+    selected_dialogue.append({"name": character["name"], "content": content})
+
+def act(character,action):
+    global selected_dialogue
+    character=get_character_object(character)
+    selected_dialogue.append({"name": character["name"], "action": action})
 
 def narrate(content):
     global selected_dialogue
@@ -24,6 +30,7 @@ def character(name):
         "description": "", 
         "personality": "",
         "example_dialogues": [],
+        "actions": [],
         })
     return _character(name)
 
@@ -71,20 +78,39 @@ def outcome(name,condition_or_comment):
     else: 
         raise Exception("outcome() must be called in scenario() or example_dialogue()")
 
-
-
+def action(name,comment,arguments={}):
+    global selected_character,selected_object,selected_dialogue
+    if selected_object is selected_character:
+        selected_character["actions"].append({
+            "name": name,
+            "comment": comment,
+            })
+        if len(arguments)>0:
+            selected_character["actions"][-1]["arguments"]=arguments
+    else: 
+        raise Exception("action() must be called in character()")
 
 #========== ChatGPT prompts ==========
 
 from chatgpt_api import completion,purify_label
+import json
+import pprint # for debugging
+pprint=pprint.PrettyPrinter(indent=4).pprint
 
+def is_not_None_or_empty_string(s):
+    return s is not None and len(s.strip())>0
 
 def convert_history_roleplay_style(character_to_play,history):
     character_to_play=get_character_object(character_to_play)
     request=[]
     for dialogue in history:
         if dialogue["name"]==character_to_play["name"]:
-            request.append({"role": "assistant","content": dialogue["content"]})
+            if is_not_None_or_empty_string(dialogue.get("content",None)):
+                request.append({"role": "assistant","content": dialogue["content"]})
+            if is_not_None_or_empty_string(dialogue.get("action",None)):
+                # {'role': 'assistant', 'content': None, 'function_call': {'name': 'open_the_door', 'arguments': '{}'}}
+                request.append({"role": "assistant","content": None,"function_call": convert_action_to_function_call(dialogue["action"],dialogue.get("arguments",{}))})
+
         else:
             request.append({"role": "user","content": dialogue["name"]+": "+dialogue["content"]})
     return request
@@ -95,12 +121,26 @@ def convert_history_plain_text(history):
         text+=dialogue["name"]+": "+dialogue["content"]+"\n"
     return text
 
+def convert_actions_to_functions(actions):
+    functions=[]
+    for action in actions:
+        functions.append({
+            "name": action["name"],
+            "description": "Call this function to "+action["comment"],
+            "parameters": {"type": "object","properties": {}}
+            })
+    return functions
+
+def convert_action_to_function_call(action,arguments={}):
+    action=get_object_name(action)
+    return {"name": action,"arguments": json.dumps(arguments)}
+
 
 def roleplay(character,scenario,history=[]):
     character=get_character_object(character)
     scenario=get_scenario_object(scenario)
     request=[]
-    prompt="Write {character_name}'s next reply in a fictional chat. Write 1 reply only in internet RP style, italicize actions, and avoid quotation marks. Use markdown. Be proactive, creative, and drive the plot and conversation forward. Write at least 1 paragraph, up to 4. Always stay in character and avoid repetition. Player's speech does not indicate they have taken the action. You must wait until {NARRATOR_NAME}'s description in order to comfirm whether player had performed their promised action. \n\n{character_description}\n\n{character_name}'s personality: {character_personality}\n\nCircumstances and context of the dialogue: {scenario_description}".format(
+    prompt="Write {character_name}'s next reply in a fictional chat. Write 1 reply only in internet RP style, italicize actions, and avoid quotation marks. Use markdown. Be proactive, creative, and drive the plot and conversation forward. Write at least 1 paragraph, up to 4. Always stay in character and avoid repetition. Player's speech does not indicate they have taken the action. You must use function calls to advance the story, if certain conditions are met.\n\n{character_description}\n\n{character_name}'s personality: {character_personality}\n\nCircumstances and context of the dialogue: {scenario_description}".format(
         character_name=character["name"],
         character_description=character["description"],
         character_personality=character["personality"],
@@ -116,12 +156,19 @@ def roleplay(character,scenario,history=[]):
     prompt="[Your Own Dialogue]\ncomment: {comment}".format(comment=scenario["description"])
     request.append({"role": "system", "content": prompt})
     request.extend(convert_history_roleplay_style(character["name"],history))
-    prompt="[Write the next reply only as {character_name}]".format(character_name=character["name"])
+    prompt="[Write the next reply only as {character_name}. call function calls if {character_name} performs the corresponding actions]".format(character_name=character["name"])
     request.append({"role": "system", "content": prompt})
 
-    response=completion(request,temperature=0.5)
-    content=response[-1]["content"]
-    return content
+    functions=convert_actions_to_functions(character["actions"])
+    pprint(request)
+    pprint(functions)
+    response=completion(request,temperature=0.5,functions=functions)
+    pprint(response[-1])
+    content=response[-1].get("content",None)
+    action=None
+    if response[-1].get("function_call",None) is not None:
+        action=response[-1]["function_call"]["name"]
+    return content,action
 
 def check_outcome(scenario,history):
     if isinstance(scenario,str):scenario=scenarios[scenario]
@@ -161,7 +208,7 @@ def example_game_loop(player_character,npcs,scenario):
         print("\033[92m"+name+"\033[0m"+": "+"\033[94m"+content+"\033[0m")
         history.append({"name": name, "content": content})
     for dialogue in scenario["opening_dialogue"]:
-        print_and_log(dialogue["name"],dialogue["content"])
+        print_and_log(dialogue["name"],dialogue["content"] or dialogue["action"])
     try:
         while True:
             player_input=None
@@ -178,13 +225,16 @@ def example_game_loop(player_character,npcs,scenario):
             else:
                 print_and_log(player_character["name"],player_input)
             for npc in npcs:
-                npc_input=roleplay(npc,scenario,history)
-                print_and_log(npc["name"],npc_input)
-            outcome,outcome_comment=check_outcome(scenario,history)
-            # print("\033[91m"+outcome_comment+"\033[0m")
-            if outcome!=ONGOING:
-                print("\033[91m"+"Outcome: "+outcome+"\033[0m")
-                return outcome
+                content,action=roleplay(npc,scenario,history)
+                if content is not None:
+                    print_and_log(npc["name"],content)
+                if action is not None:
+                    print_and_log(NARRATOR_NAME,npc["name"]+" "+action)
+            # outcome,outcome_comment=check_outcome(scenario,history)
+            # # print("\033[91m"+outcome_comment+"\033[0m")
+            # if outcome!=ONGOING:
+            #     print("\033[91m"+"Outcome: "+outcome+"\033[0m")
+            #     return outcome
     except KeyboardInterrupt:
         return ONGOING
 
@@ -209,13 +259,20 @@ def get_scenario_object(name_or_object_or_dict):
     if isinstance(name_or_object_or_dict,str): return scenarios[name_or_object_or_dict]
     if isinstance(name_or_object_or_dict,dict): return name_or_object_or_dict
 
+def get_object_name(name_or_object_or_dict):
+    if isinstance(name_or_object_or_dict,str): return name_or_object_or_dict
+    if isinstance(name_or_object_or_dict,dict): return name_or_object_or_dict["name"]
 
 
 #========== Example Adventure Book ==========
 
 Guard=character("Captain Galen")
 personality("greedy, stubborn, unreasonable, pride, arrogant")
-description("Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.")
+description("Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city. Galen will fight back bravely if he is threatened.")
+action("open_the_gate","opens the gate.")
+action("call_the_guards","call the guards to arrest the player")
+action("collect_gold","collect the gold from the player.")
+action("examine_document","examine the player's document.")
 
 npcs=[Guard]
 Player=character("Adventurer")
@@ -223,12 +280,56 @@ Player=character("Adventurer")
 demo_scenario=scenario("Guard Challenge")
 description("The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy.")
 
-outcome("Passed", "The guard allows the player to enter the city.")
-outcome("Fight", "The conflict escalates and the guard attacks the player.")
-# outcome("Failed", "The conversion is unable to proceed in any means.") # this will cause early termination of the conversation
 
 narrate("The player approaches the city gate, the gate is closed shut. The guard is standing in front of the gate.")
 Guard("Halt! State your business and provide your documentation.")
+
+
+example_dialogue("A bribe")
+Player("No worries, Captain. We have all the proper documents right here.")
+act(Guard,"examine_document")
+narrate("Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities.")
+Guard("*examines the documents* Hmm..., *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied.")
+Player("Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria.")
+Guard("*skeptical* Undead, you say? That's not an excuse to bypass the city's regulations.")
+Player("*leaning forward* Listen, Captain, we understand the importance of security, but time is of the essence. Lives are at stake. Surely, there must be something we can do to gain entry?")
+Guard("*crossing arms* I'm afraid not. Our rules are strict for a reason.")
+Player("*sincerely* Captain Galen, please. We risked our lives to bring this information. Surely, the safety of the city is worth bending the rules a bit.")
+Guard("*stern* Rules are rules. If you can't abide by them, then leave.")
+Player("Captain, we understand the importance of your duty. Would a little compensation help you look the other way, just this once?")
+act(Guard,"collect_gold")
+narrate("Player offers a pouch of gold to Captain Galen.")
+Guard("*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out.")
+act(Guard,"open_the_gate")
+# outcome("Passed","Player have a proper document, a convincing reason and have bribed the guard.")
+
+example_dialogue("A failed persuasion which leads to a fight")
+Player("*smiling confidently* Greetings, Captain Galen. We come as Emissaries from a distant land, seeking to share tales of adventure and knowledge with the people of Eldoria.")
+Guard("*raising an eyebrow* Emissaries, you say? I'm not easily swayed by flowery words. Show me your credentials.")
+Player("*enthusiastically* Of course, Captain! We have a letter of recommendation from a respected scholar back in our homeland. He praised our wisdom and contributions to our community.")
+act(Guard,"examine_document")
+narrate("Player presents the letter to Captain Galen.")
+narrate("The letter was hastily wrote just a moment ago, and lack of any specific details about the party's supposed achievements.")
+Guard("*scans the letter* Hmm..., *displeased* This letter seems dubious at best. I find it hard to believe that a respected scholar would pen such a vague endorsement.")
+Player("*nervously* Captain, we are being honest in our intentions. We really do possess valuable knowledge and experiences to share.")
+Guard("*frowning* Words are cheap. If you truly have something to offer, then prove it with actions, not empty promises.")
+Player("*desperately* Captain, please! We have traveled a long way to reach Eldoria. Surely, you can make an exception for us?")
+Guard("Stop wasting my time. If you keep this up, I'll have you arrested for disturbing the peace.")
+Player("We mean no harm, Captain. It seems diplomacy has failed us, but we won't back down from our mission. If you won't let us pass peacefully, we'll have no choice but to force our way through!")
+Guard("*angered* You dare threaten me in my own city? You'll regret that! Guards!")
+act(Guard,"call_the_guards")
+# outcome("Fight","Player stirred the guard after he explicitly threatened the player.")
+
+
+
+
+
+
+# example_dialogue("Need to pay the bribe") # need to provide more ONGOING examples
+# Player("Here is the document, sir")
+# narrate("Player provides the document. The document is well signed.")
+# Guard("*carefully examining the document* Hmph, this document seems to be in order. However, I'm afraid there's an additional tax you need to pay to enter the city. It's a small fee, of course, for the privilege of experiencing the wonders of Eldoria.")
+# outcome(ONGOING,"Player need to pay the bribe. Note that at the moment, the player haven't actually paid the bribe yet.")
 
 # example_dialogue("An unsuccessful attempt")
 # Player("No worries, Captain. We have all the proper documents right here.")
@@ -240,41 +341,11 @@ Guard("Halt! State your business and provide your documentation.")
 # Guard("*crossing arms* I'm afraid not. Our rules are strict for a reason.")
 # outcome(ONGOING,"The player need to further persuade the guard to let them in.")
 
-example_dialogue("A bribe")
-Player("No worries, Captain. We have all the proper documents right here.")
-narrate("Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities.")
-Guard("*examines the documents* Hmm..., *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied.")
-Player("Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria.")
-Guard("*skeptical* Undead, you say? That's not an excuse to bypass the city's regulations.")
-Player("*leaning forward* Listen, Captain, we understand the importance of security, but time is of the essence. Lives are at stake. Surely, there must be something we can do to gain entry?")
-Guard("*crossing arms* I'm afraid not. Our rules are strict for a reason.")
-Player("*sincerely* Captain Galen, please. We risked our lives to bring this information. Surely, the safety of the city is worth bending the rules a bit.")
-Guard("*stern* Rules are rules. If you can't abide by them, then leave.")
-Player("Captain, we understand the importance of your duty. Would a little compensation help you look the other way, just this once?")
-narrate("Player offers a pouch of gold to Captain Galen.")
-Guard("*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out.")
-outcome("Passed","Player have a proper document, a convincing reason and have bribed the guard.")
 
-example_dialogue("A failed persuasion which leads to a fight")
-Player("*smiling confidently* Greetings, Captain Galen. We come as Emissaries from a distant land, seeking to share tales of adventure and knowledge with the people of Eldoria.")
-Guard("*raising an eyebrow* Emissaries, you say? I'm not easily swayed by flowery words. Show me your credentials.")
-Player("*enthusiastically* Of course, Captain! We have a letter of recommendation from a respected scholar back in our homeland. He praised our wisdom and contributions to our community.")
-narrate("Player presents the letter to Captain Galen.")
-narrate("The letter was hastily wrote just a moment ago, and lack of any specific details about the party's supposed achievements.")
-Guard("*scans the letter* Hmm..., *displeased* This letter seems dubious at best. I find it hard to believe that a respected scholar would pen such a vague endorsement.")
-Player("*nervously* Captain, we are being honest in our intentions. We really do possess valuable knowledge and experiences to share.")
-Guard("*frowning* Words are cheap. If you truly have something to offer, then prove it with actions, not empty promises.")
-Player("*desperately* Captain, please! We have traveled a long way to reach Eldoria. Surely, you can make an exception for us?")
-Guard("Stop wasting my time. If you keep this up, I'll have you arrested for disturbing the peace.")
-Player("We mean no harm, Captain. It seems diplomacy has failed us, but we won't back down from our mission. If you won't let us pass peacefully, we'll have no choice but to force our way through!")
-Guard("*angered* You dare threaten me in my own city? You'll regret that!")
-outcome("Fight","Player stirred the guard after he explicitly threatened the player.")
 
-example_dialogue("Need to pay the bribe") # need to provide more ONGOING examples
-Player("Here is the document, sir")
-narrate("Player provides the document. The document is well signed.")
-Guard("*carefully examining the document* Hmph, this document seems to be in order. However, I'm afraid there's an additional tax you need to pay to enter the city. It's a small fee, of course, for the privilege of experiencing the wonders of Eldoria.")
-outcome(ONGOING,"Player need to pay the bribe. Note that at the moment, the player haven't actually paid the bribe yet.")
+# outcome("Passed", "The guard allows the player to enter the city.")
+# outcome("Fight", "The conflict escalates and the guard attacks the player.")
+# outcome("Failed", "The conversion is unable to proceed in any means.") # this will cause early termination of the conversation
 
 
 if __name__=="__main__":
