@@ -1,14 +1,16 @@
-# Dejavu: Chat with AI in your adventure game with prescripted script.
+# Dejavu: Chat with AI in your Ren'Py adventure game with prescripted script.
 
-**With Renpy Support**
+*Ren'Py-like natural language with full rollback/SaveLoad support!*
+
+## Introduction
 
 It has been proven that Large Language Models such as ChatGPT are able to perform role playing tasks. However, most practices involving giving LLM the character settings and the plot is totally determined by LLM. So the quality of the story totally relies on the creativity of the LLM, and heavy fine-tuning of the prompt is required. 
 
 Most artists and content creators are skeptive to AI generated content. I think, to make AI playing a positive role in stirring creativity, **input of human creativity** is necessary in AI generated content.
 
-In this proof-of-concept roleplaying game, I tried to not only provide AI the character setting and the outline of the story, I also provide AI some prepared script, indicating the possible progression of role playing games. I call this method "Dejavu". The AI have Dejavu of what will happens.
+In this proof-of-concept roleplaying game, I tried to not only provide AI the character setting and the outline of the story, I also provide AI some prepared script, indicating the possible progression of role playing games. I call this method **"Dejavu"**. *The AI have Dejavu of what will happen.*
 
-In machine learning jargon, this method is called "Few Shot Learning". By few shot learning, on can provide more details and a much richer personality to the AI character. Also It can help the conversation not going derailed.
+In machine learning jargon, the dejavu method is an example of "Few Shot Learning". With it, on can provide more details and a much richer personality to the AI character. Also It can prevent the conversation from being derailed.
 
 
 
@@ -19,6 +21,7 @@ In machine learning jargon, this method is called "Few Shot Learning". By few sh
 ### Example Code (Ren'Py)
 
 ```py
+# ...
 
 # The following dialogue examples feed the AI with different possibilities of storylines, to make it understand the desired plot and writing style
 
@@ -41,6 +44,8 @@ dejavu.narrator "Player offers a pouch of gold to Captain Galen."
 Guard "*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out."
 dejavu.jump "Passed" ("Player have a proper document, a convincing reason and have bribed the guard.") # AI will determine which outcome the player achieved!
 
+# ...
+
 label .take_item:
     $item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
     if item=="no":
@@ -55,4 +60,11 @@ label .passed:
     "You successfully enter the city."
     "Good Ending"
     return
+
+# ...
 ```
+
+
+## Issues and Limitations
+
+ChatGPT will stuck for minutes when encountering sensitive content. Think about Isaac Asimov's "Three Laws of Robotics"!
