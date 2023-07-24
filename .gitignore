@@ -1,6 +1,6 @@
-.private
-.trash
-.tmp
+.private/
+.trash/
+.tmp/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
