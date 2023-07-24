@@ -153,6 +153,12 @@ define config.save_directory = "TheCityGate-1690142165"
 define config.window_icon = "gui/window_icon.png"
 
 
+
+
+
+define gui.text_size = 24
+define config.log="debug_log.txt"
+
 ## Build configuration #########################################################
 ##
 ## This section controls how Ren'Py turns your project into distribution files.

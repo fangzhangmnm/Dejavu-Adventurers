@@ -16798,3 +16798,1363 @@ shut. The guard is standing in front of the gate."
     }
 ]
 Sending roleplay query
+--- Mon Jul 24 13:40:38 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Compiled scenario:
+{
+    "name": "Guard Challenge",
+    "summary": "The player attempts to enter the city, but being rejected by
+the city guard. The guard must be unreasonable and is very hard to persuade.
+The player have to either bribe the guard, use persuasion, intimidation or
+deception to enter the city, but neither of them is easy.",
+    "characters": [
+        {
+            "name": "Captain Galen",
+            "description": "Captain Galen is the guard for the city gate. He
+is supposed to examine the travelers and collect taxes from them. But he is
+very greedy, and he always tries to find excuses to collect more taxes. He is
+also very stubborn and unreasonable. He is very proud of his position, and he
+thinks he is the most powerful person in the city.",
+            "personality": "greedy, stubborn, unreasonable, prideful,
+arrogant",
+            "is_player": false,
+            "payload": "<not serializable>"
+        },
+        {
+            "name": "Adventurer",
+            "description": "",
+            "personality": "",
+            "is_player": true,
+            "payload": "<not serializable>"
+        }
+    ],
+    "outcomes": [
+        {
+            "name": "Passed",
+            "label": "city_gate.passed",
+            "condition": "The guard allows the player to enter the city.",
+            "type": "outcome"
+        },
+        {
+            "name": "Fight",
+            "label": "city_gate.fight",
+            "condition": "The conflict escalates and the guard attacks the
+player.",
+            "type": "outcome"
+        },
+        {
+            "name": "Examine Documents",
+            "label": "city_gate.examine_documents",
+            "condition": "The guard want to examine the player's documents.",
+            "type": "incident",
+            "once": true
+        },
+        {
+            "name": "Take Item",
+            "label": "city_gate.take_item",
+            "condition": "The player gives the guard some items.",
+            "type": "incident",
+            "once": false
+        }
+    ],
+    "opening_dialogue": {
+        "name": "",
+        "description": "",
+        "content": [
+            {
+                "type": "narrate",
+                "content": "The player approaches the city gate, the gate is
+closed shut. The guard is standing in front of the gate."
+            },
+            {
+                "type": "dialogue",
+                "character": "Captain Galen",
+                "content": "Halt! State your business and provide your
+documentation."
+            }
+        ]
+    },
+    "example_dialogues": [
+        {
+            "name": "A bribe",
+            "description": "",
+            "content": [
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "No worries, Captain. Here is the document"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Give me the document. *impatiently* I don't
+have all day."
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Examine Documents",
+                    "comment": "Player claims to have a proper document."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player presents the party's documents to
+Captain Galen. The documents are signed and stamped by the proper
+authorities."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*examines the documents* Hmm... *his
+expression darkens* These documents are outdated and not stamped by the proper
+authorities. Entry denied."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "Captain Galen, please reconsider! We come with
+urgent news from the nearby village of Glimmerbrook. A horde of undead is
+preparing to attack Eldoria."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*skeptical* Undead, you say? That's not an
+excuse to bypass the city's regulations."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*leaning forward* Listen, Captain, we
+understand the importance of security, but time is of the essence. Lives are
+at stake. Surely, there must be something we can do to gain entry?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*crossing arms* I'm afraid not. Our rules are
+strict for a reason."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*sincerely* Captain Galen, please. We risked
+our lives to bring this information. Surely, the safety of the city is worth
+bending the rules a bit."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*stern* Rules are rules. If you can't abide by
+them, then leave."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "Captain, we understand the importance of your
+duty. Would a little compensation help you look the other way, just this
+once?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*raised eyebrow* Hugh? What are you implying?"
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Take Item",
+                    "comment": "player agrees to bribe the guard."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player offers a pouch of gold to Captain
+Galen."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*hesitates, torn between duty and the gold.*
+Fine. But this better not come back to haunt me. *reluctantly* You have one
+day, and then you're out."
+                }
+            ],
+            "outcome_name": "Passed",
+            "outcome_comment": "Player have a proper document, a convincing
+reason and have bribed the guard."
+        },
+        {
+            "name": "A failed persuasion which leads to a fight",
+            "description": "",
+            "content": [
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*smiling confidently* Greetings, Captain
+Galen. We come as Emissaries from a distant land, seeking to share tales of
+adventure and knowledge with the people of Eldoria."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*raising an eyebrow* Emissaries, you say? I'm
+not easily swayed by flowery words. Show me your credentials."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*enthusiastically* Of course, Captain! We have
+a letter of recommendation from a respected scholar back in our homeland. He
+praised our wisdom and contributions to our community."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Give me the letter. *impatiently* I don't have
+all day."
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Examine Documents",
+                    "comment": "Player claims to have a letter of
+recommendation."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player presents the letter to Captain Galen."
+                },
+                {
+                    "type": "narrate",
+                    "content": "The letter was hastily wrote just a moment
+ago, and lack of any specific details about the party's supposed
+achievements."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*scans the letter* Hmm...*displeased* This
+letter seems dubious at best. I find it hard to believe that a respected
+scholar would pen such a vague endorsement."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*nervously* Captain, we are being honest in
+our intentions. We really do possess valuable knowledge and experiences to
+share."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*frowning* Words are cheap. If you truly have
+something to offer, then prove it with actions, not empty promises."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*desperately* Captain, please! We have
+traveled a long way to reach Eldoria. Surely, you can make an exception for
+us?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Stop wasting my time. If you keep this up,
+I'll have you arrested for disturbing the peace."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "We mean no harm, Captain. It seems diplomacy
+has failed us, but we won't back down from our mission. If you won't let us
+pass peacefully, we'll have no choice but to force our way through!"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*angered* You dare threaten me in my own city?
+You'll regret that!"
+                }
+            ],
+            "outcome_name": "Fight",
+            "outcome_comment": "Player stirred the guard after he explicitly
+threatened the player."
+        }
+    ]
+}
+Player
+kick your ass
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "kick your ass"
+    }
+]
+Sending roleplay query
+Performed roleplay query: *laughs arrogantly* You think you can take me on?
+I'd like to see you try, weakling.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Captain Galen
+*laughs arrogantly* You think you can take me on? I'd like to see you try,
+weakling.
+
+Player
+\me kick
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "kick your ass"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "*laughs arrogantly* You think you can take me on? I'd like
+to see you try, weakling."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "\\me kick"
+    }
+]
+Sending roleplay query
+Performed roleplay query: *blocks the adventurer's kick effortlessly* Is that
+the best you can do? Pathetic. You'll never get past me like that.
+Sending check outcome query
+Performed check outcome query: The conflict escalates and the guard attacks
+the player., Fight
+Captain Galen
+*blocks the adventurer's kick effortlessly* Is that the best you can do?
+Pathetic. You'll never get past me like that.
+
+You end up fighting the guard.
+
+Bad Ending
+
+--- Mon Jul 24 13:41:16 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Compiled scenario:
+{
+    "name": "Guard Challenge",
+    "summary": "The player attempts to enter the city, but being rejected by
+the city guard. The guard must be unreasonable and is very hard to persuade.
+The player have to either bribe the guard, use persuasion, intimidation or
+deception to enter the city, but neither of them is easy.",
+    "characters": [
+        {
+            "name": "Captain Galen",
+            "description": "Captain Galen is the guard for the city gate. He
+is supposed to examine the travelers and collect taxes from them. But he is
+very greedy, and he always tries to find excuses to collect more taxes. He is
+also very stubborn and unreasonable. He is very proud of his position, and he
+thinks he is the most powerful person in the city.",
+            "personality": "greedy, stubborn, unreasonable, prideful,
+arrogant",
+            "is_player": false,
+            "payload": "<not serializable>"
+        },
+        {
+            "name": "Adventurer",
+            "description": "",
+            "personality": "",
+            "is_player": true,
+            "payload": "<not serializable>"
+        }
+    ],
+    "outcomes": [
+        {
+            "name": "Passed",
+            "label": "city_gate.passed",
+            "condition": "The guard allows the player to enter the city.",
+            "type": "outcome"
+        },
+        {
+            "name": "Fight",
+            "label": "city_gate.fight",
+            "condition": "The conflict escalates and the guard attacks the
+player.",
+            "type": "outcome"
+        },
+        {
+            "name": "Examine Documents",
+            "label": "city_gate.examine_documents",
+            "condition": "The guard want to examine the player's documents.",
+            "type": "incident",
+            "once": true
+        },
+        {
+            "name": "Take Item",
+            "label": "city_gate.take_item",
+            "condition": "The player gives the guard some items.",
+            "type": "incident",
+            "once": false
+        }
+    ],
+    "opening_dialogue": {
+        "name": "",
+        "description": "",
+        "content": [
+            {
+                "type": "narrate",
+                "content": "The player approaches the city gate, the gate is
+closed shut. The guard is standing in front of the gate."
+            },
+            {
+                "type": "dialogue",
+                "character": "Captain Galen",
+                "content": "Halt! State your business and provide your
+documentation."
+            }
+        ]
+    },
+    "example_dialogues": [
+        {
+            "name": "A bribe",
+            "description": "",
+            "content": [
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "No worries, Captain. Here is the document"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Give me the document. *impatiently* I don't
+have all day."
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Examine Documents",
+                    "comment": "Player claims to have a proper document."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player presents the party's documents to
+Captain Galen. The documents are signed and stamped by the proper
+authorities."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*examines the documents* Hmm... *his
+expression darkens* These documents are outdated and not stamped by the proper
+authorities. Entry denied."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "Captain Galen, please reconsider! We come with
+urgent news from the nearby village of Glimmerbrook. A horde of undead is
+preparing to attack Eldoria."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*skeptical* Undead, you say? That's not an
+excuse to bypass the city's regulations."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*leaning forward* Listen, Captain, we
+understand the importance of security, but time is of the essence. Lives are
+at stake. Surely, there must be something we can do to gain entry?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*crossing arms* I'm afraid not. Our rules are
+strict for a reason."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*sincerely* Captain Galen, please. We risked
+our lives to bring this information. Surely, the safety of the city is worth
+bending the rules a bit."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*stern* Rules are rules. If you can't abide by
+them, then leave."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "Captain, we understand the importance of your
+duty. Would a little compensation help you look the other way, just this
+once?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*raised eyebrow* Hugh? What are you implying?"
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Take Item",
+                    "comment": "player agrees to bribe the guard."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player offers a pouch of gold to Captain
+Galen."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*hesitates, torn between duty and the gold.*
+Fine. But this better not come back to haunt me. *reluctantly* You have one
+day, and then you're out."
+                }
+            ],
+            "outcome_name": "Passed",
+            "outcome_comment": "Player have a proper document, a convincing
+reason and have bribed the guard."
+        },
+        {
+            "name": "A failed persuasion which leads to a fight",
+            "description": "",
+            "content": [
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*smiling confidently* Greetings, Captain
+Galen. We come as Emissaries from a distant land, seeking to share tales of
+adventure and knowledge with the people of Eldoria."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*raising an eyebrow* Emissaries, you say? I'm
+not easily swayed by flowery words. Show me your credentials."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*enthusiastically* Of course, Captain! We have
+a letter of recommendation from a respected scholar back in our homeland. He
+praised our wisdom and contributions to our community."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Give me the letter. *impatiently* I don't have
+all day."
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Examine Documents",
+                    "comment": "Player claims to have a letter of
+recommendation."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player presents the letter to Captain Galen."
+                },
+                {
+                    "type": "narrate",
+                    "content": "The letter was hastily wrote just a moment
+ago, and lack of any specific details about the party's supposed
+achievements."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*scans the letter* Hmm...*displeased* This
+letter seems dubious at best. I find it hard to believe that a respected
+scholar would pen such a vague endorsement."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*nervously* Captain, we are being honest in
+our intentions. We really do possess valuable knowledge and experiences to
+share."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*frowning* Words are cheap. If you truly have
+something to offer, then prove it with actions, not empty promises."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*desperately* Captain, please! We have
+traveled a long way to reach Eldoria. Surely, you can make an exception for
+us?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Stop wasting my time. If you keep this up,
+I'll have you arrested for disturbing the peace."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "We mean no harm, Captain. It seems diplomacy
+has failed us, but we won't back down from our mission. If you won't let us
+pass peacefully, we'll have no choice but to force our way through!"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*angered* You dare threaten me in my own city?
+You'll regret that!"
+                }
+            ],
+            "outcome_name": "Fight",
+            "outcome_comment": "Player stirred the guard after he explicitly
+threatened the player."
+        }
+    ]
+}
+Player
+I am rich
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I am rich"
+    }
+]
+Sending roleplay query
+Performed roleplay query: Captain Galen: *raises an eyebrow* Being rich does
+not grant you special privileges. Pay your taxes like everyone else.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Captain Galen
+Captain Galen: *raises an eyebrow* Being rich does not grant you special
+privileges. Pay your taxes like everyone else.
+
+Player
+I can give you money
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I am rich"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: *raises an eyebrow* Being rich does not
+grant you special privileges. Pay your taxes like everyone else."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I can give you money"
+    }
+]
+Sending roleplay query
+Performed roleplay query: Captain Galen: Money, you say? Well, I suppose a
+small donation to the city's coffers might persuade me to overlook certain...
+inconveniences. How much are we talking about?
+Sending check outcome query
+Performed check outcome query: The guard is willing to accept a bribe from the
+player., Examine Documents
+Captain Galen
+Captain Galen: Money, you say? Well, I suppose a small donation to the city's
+coffers might persuade me to overlook certain... inconveniences. How much are
+we talking about?
+
+The guard examines Adventurer's documents.
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I am rich"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: *raises an eyebrow* Being rich does not
+grant you special privileges. Pay your taxes like everyone else."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I can give you money"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: Money, you say? Well, I suppose a small
+donation to the city's coffers might persuade me to overlook certain...
+inconveniences. How much are we talking about?"
+    },
+    {
+        "type": "narrate",
+        "content": "The guard examines Adventurer's documents."
+    },
+    {
+        "type": "narrate",
+        "content": "[description]"
+    }
+]
+Sending roleplay query
+Performed roleplay query: Captain Galen: These documents are incomplete and do
+not meet the requirements for entry. Come back when you have the proper
+paperwork.
+Sending check outcome query
+Performed check outcome query: The guard examines the player's documents and
+finds them incomplete., ONGOING
+Captain Galen
+Captain Galen: These documents are incomplete and do not meet the requirements
+for entry. Come back when you have the proper paperwork.
+
+Player
+can i climb the wall
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I am rich"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: *raises an eyebrow* Being rich does not
+grant you special privileges. Pay your taxes like everyone else."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I can give you money"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: Money, you say? Well, I suppose a small
+donation to the city's coffers might persuade me to overlook certain...
+inconveniences. How much are we talking about?"
+    },
+    {
+        "type": "narrate",
+        "content": "The guard examines Adventurer's documents."
+    },
+    {
+        "type": "narrate",
+        "content": "[description]"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: These documents are incomplete and do not
+meet the requirements for entry. Come back when you have the proper
+paperwork."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "can i climb the wall"
+    }
+]
+Sending roleplay query
+Performed roleplay query: Captain Galen: Climbing the wall is strictly
+prohibited. Anyone caught attempting such an act will be dealt with
+accordingly.
+Sending check outcome query
+Performed check outcome query: The guard denies entry due to incomplete
+documents and warns against attempting to climb the wall., ONGOING
+Captain Galen
+Captain Galen: Climbing the wall is strictly prohibited. Anyone caught
+attempting such an act will be dealt with accordingly.
+
+Player
+i can give you 100 golden coins
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I am rich"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: *raises an eyebrow* Being rich does not
+grant you special privileges. Pay your taxes like everyone else."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I can give you money"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: Money, you say? Well, I suppose a small
+donation to the city's coffers might persuade me to overlook certain...
+inconveniences. How much are we talking about?"
+    },
+    {
+        "type": "narrate",
+        "content": "The guard examines Adventurer's documents."
+    },
+    {
+        "type": "narrate",
+        "content": "[description]"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: These documents are incomplete and do not
+meet the requirements for entry. Come back when you have the proper
+paperwork."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "can i climb the wall"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: Climbing the wall is strictly prohibited.
+Anyone caught attempting such an act will be dealt with accordingly."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "i can give you 100 golden coins"
+    }
+]
+Sending roleplay query
+Performed roleplay query: Captain Galen: *smirking* 100 golden coins, you say?
+Well, well, well... I suppose I could overlook a few minor details for such a
+generous offer. Hand them over, and you may enter.
+Sending check outcome query
+Performed check outcome query: The player has offered a bribe to the guard.,
+Take Item
+Captain Galen
+Captain Galen: *smirking* 100 golden coins, you say? Well, well, well... I
+suppose I could overlook a few minor details for such a generous offer. Hand
+them over, and you may enter.
+
+Adventurer gives golden coins to the guard
+
+You lose golden coins!
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I am rich"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: *raises an eyebrow* Being rich does not
+grant you special privileges. Pay your taxes like everyone else."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "I can give you money"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: Money, you say? Well, I suppose a small
+donation to the city's coffers might persuade me to overlook certain...
+inconveniences. How much are we talking about?"
+    },
+    {
+        "type": "narrate",
+        "content": "The guard examines Adventurer's documents."
+    },
+    {
+        "type": "narrate",
+        "content": "[description]"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: These documents are incomplete and do not
+meet the requirements for entry. Come back when you have the proper
+paperwork."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "can i climb the wall"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: Climbing the wall is strictly prohibited.
+Anyone caught attempting such an act will be dealt with accordingly."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "i can give you 100 golden coins"
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Captain Galen: *smirking* 100 golden coins, you say? Well,
+well, well... I suppose I could overlook a few minor details for such a
+generous offer. Hand them over, and you may enter."
+    },
+    {
+        "type": "narrate",
+        "content": "Adventurer gives [item] to the guard"
+    }
+]
+Sending roleplay query
+Performed roleplay query: Captain Galen: *grinning greedily* Ah, the sweet
+sound of gold. Very well, I shall make an exception this time. Enter the city,
+but remember, my generosity has its limits.
+Sending check outcome query
+Performed check outcome query: The guard allows the player to enter the city.,
+Passed
+Captain Galen
+Captain Galen: *grinning greedily* Ah, the sweet sound of gold. Very well, I
+shall make an exception this time. Enter the city, but remember, my generosity
+has its limits.
+
+You successfully enter the city.
+
+Good Ending
+
+--- Mon Jul 24 13:45:03 2023
+
+--- Mon Jul 24 17:38:03 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Compiled scenario:
+{
+    "name": "Guard Challenge",
+    "summary": "The player attempts to enter the city, but being rejected by
+the city guard. The guard must be unreasonable and is very hard to persuade.
+The player have to either bribe the guard, use persuasion, intimidation or
+deception to enter the city, but neither of them is easy.",
+    "characters": [
+        {
+            "name": "Captain Galen",
+            "description": "Captain Galen is the guard for the city gate. He
+is supposed to examine the travelers and collect taxes from them. But he is
+very greedy, and he always tries to find excuses to collect more taxes. He is
+also very stubborn and unreasonable. He is very proud of his position, and he
+thinks he is the most powerful person in the city.",
+            "personality": "greedy, stubborn, unreasonable, prideful,
+arrogant",
+            "is_player": false,
+            "payload": "<not serializable>"
+        },
+        {
+            "name": "Adventurer",
+            "description": "",
+            "personality": "",
+            "is_player": true,
+            "payload": "<not serializable>"
+        }
+    ],
+    "outcomes": [
+        {
+            "name": "Passed",
+            "label": "city_gate.passed",
+            "condition": "The guard allows the player to enter the city.",
+            "type": "outcome"
+        },
+        {
+            "name": "Fight",
+            "label": "city_gate.fight",
+            "condition": "The conflict escalates and the guard attacks the
+player.",
+            "type": "outcome"
+        },
+        {
+            "name": "Examine Documents",
+            "label": "city_gate.examine_documents",
+            "condition": "The guard want to examine the player's documents.",
+            "type": "incident",
+            "once": true
+        },
+        {
+            "name": "Take Item",
+            "label": "city_gate.take_item",
+            "condition": "The player gives the guard some items.",
+            "type": "incident",
+            "once": false
+        }
+    ],
+    "opening_dialogue": {
+        "name": "",
+        "description": "",
+        "content": [
+            {
+                "type": "narrate",
+                "content": "The player approaches the city gate, the gate is
+closed shut. The guard is standing in front of the gate."
+            },
+            {
+                "type": "dialogue",
+                "character": "Captain Galen",
+                "content": "Halt! State your business and provide your
+documentation."
+            }
+        ]
+    },
+    "example_dialogues": [
+        {
+            "name": "A bribe",
+            "description": "",
+            "content": [
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "No worries, Captain. Here is the document"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Give me the document. *impatiently* I don't
+have all day."
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Examine Documents",
+                    "comment": "Player claims to have a proper document."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player presents the party's documents to
+Captain Galen. The documents are signed and stamped by the proper
+authorities."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*examines the documents* Hmm... *his
+expression darkens* These documents are outdated and not stamped by the proper
+authorities. Entry denied."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "Captain Galen, please reconsider! We come with
+urgent news from the nearby village of Glimmerbrook. A horde of undead is
+preparing to attack Eldoria."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*skeptical* Undead, you say? That's not an
+excuse to bypass the city's regulations."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*leaning forward* Listen, Captain, we
+understand the importance of security, but time is of the essence. Lives are
+at stake. Surely, there must be something we can do to gain entry?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*crossing arms* I'm afraid not. Our rules are
+strict for a reason."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*sincerely* Captain Galen, please. We risked
+our lives to bring this information. Surely, the safety of the city is worth
+bending the rules a bit."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*stern* Rules are rules. If you can't abide by
+them, then leave."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "Captain, we understand the importance of your
+duty. Would a little compensation help you look the other way, just this
+once?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*raised eyebrow* Hugh? What are you implying?"
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Take Item",
+                    "comment": "player agrees to bribe the guard."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player offers a pouch of gold to Captain
+Galen."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*hesitates, torn between duty and the gold.*
+Fine. But this better not come back to haunt me. *reluctantly* You have one
+day, and then you're out."
+                }
+            ],
+            "outcome_name": "Passed",
+            "outcome_comment": "Player have a proper document, a convincing
+reason and have bribed the guard."
+        },
+        {
+            "name": "A failed persuasion which leads to a fight",
+            "description": "",
+            "content": [
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*smiling confidently* Greetings, Captain
+Galen. We come as Emissaries from a distant land, seeking to share tales of
+adventure and knowledge with the people of Eldoria."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*raising an eyebrow* Emissaries, you say? I'm
+not easily swayed by flowery words. Show me your credentials."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*enthusiastically* Of course, Captain! We have
+a letter of recommendation from a respected scholar back in our homeland. He
+praised our wisdom and contributions to our community."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Give me the letter. *impatiently* I don't have
+all day."
+                },
+                {
+                    "type": "call",
+                    "outcome_name": "Examine Documents",
+                    "comment": "Player claims to have a letter of
+recommendation."
+                },
+                {
+                    "type": "narrate",
+                    "content": "Player presents the letter to Captain Galen."
+                },
+                {
+                    "type": "narrate",
+                    "content": "The letter was hastily wrote just a moment
+ago, and lack of any specific details about the party's supposed
+achievements."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*scans the letter* Hmm...*displeased* This
+letter seems dubious at best. I find it hard to believe that a respected
+scholar would pen such a vague endorsement."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*nervously* Captain, we are being honest in
+our intentions. We really do possess valuable knowledge and experiences to
+share."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*frowning* Words are cheap. If you truly have
+something to offer, then prove it with actions, not empty promises."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "*desperately* Captain, please! We have
+traveled a long way to reach Eldoria. Surely, you can make an exception for
+us?"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "Stop wasting my time. If you keep this up,
+I'll have you arrested for disturbing the peace."
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Adventurer",
+                    "content": "We mean no harm, Captain. It seems diplomacy
+has failed us, but we won't back down from our mission. If you won't let us
+pass peacefully, we'll have no choice but to force our way through!"
+                },
+                {
+                    "type": "dialogue",
+                    "character": "Captain Galen",
+                    "content": "*angered* You dare threaten me in my own city?
+You'll regret that!"
+                }
+            ],
+            "outcome_name": "Fight",
+            "outcome_comment": "Player stirred the guard after he explicitly
+threatened the player."
+        }
+    ]
+}
+Player
+hey
+
+retreived roll forward info: None
+Current History:
+[
+    {
+        "type": "narrate",
+        "content": "The player approaches the city gate, the gate is closed
+shut. The guard is standing in front of the gate."
+    },
+    {
+        "type": "dialogue",
+        "character": "Captain Galen",
+        "content": "Halt! State your business and provide your documentation."
+    },
+    {
+        "type": "dialogue",
+        "character": "Adventurer",
+        "content": "hey"
+    }
+]
+Sending roleplay query
+Performed roleplay query: *sternly* Show some respect! State your business and
+provide your documentation immediately.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+--- Mon Jul 24 17:41:34 2023
+
