@@ -1,4 +1,7 @@
-from dejavu import *
+try:
+    from .main import *
+except ImportError:
+    from main import *
 
 
 scenario("Guard Challenge")
@@ -23,13 +26,13 @@ incident("Take Gold","label_take_gold")
 condition("The player gives the guard gold")
 
 opening_dialogue()
-narrate("The player approaches the city gate, the gate is closed shut. The guard is standing in front of the gate.")
+narrator("The player approaches the city gate, the gate is closed shut. The guard is standing in front of the gate.")
 Guard("Halt! State your business and provide your documentation.")
 
 example_dialogue("A bribe")
 Player("No worries, Captain. We have all the proper documents right here.")
 call("Examine Documents","Player claims to have a proper document.")
-narrate("Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities.")
+narrator("Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities.")
 Guard("*examines the documents* Hmm..., *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied.")
 Player("Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria.")
 Guard("*skeptical* Undead, you say? That's not an excuse to bypass the city's regulations.")
@@ -39,7 +42,7 @@ Player("*sincerely* Captain Galen, please. We risked our lives to bring this inf
 Guard("*stern* Rules are rules. If you can't abide by them, then leave.")
 Player("Captain, we understand the importance of your duty. Would a little compensation help you look the other way, just this once?")
 call("Take Gold","player agrees to bribe the guard.")
-narrate("Player offers a pouch of gold to Captain Galen.")
+narrator("Player offers a pouch of gold to Captain Galen.")
 Guard("*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out.")
 jump("Passed","Player have a proper document, a convincing reason and have bribed the guard.")
 
@@ -48,8 +51,8 @@ Player("*smiling confidently* Greetings, Captain Galen. We come as Emissaries fr
 Guard("*raising an eyebrow* Emissaries, you say? I'm not easily swayed by flowery words. Show me your credentials.")
 Player("*enthusiastically* Of course, Captain! We have a letter of recommendation from a respected scholar back in our homeland. He praised our wisdom and contributions to our community.")
 call("Examine Documents","Player claims to have a letter of recommendation.")
-narrate("Player presents the letter to Captain Galen.")
-narrate("The letter was hastily wrote just a moment ago, and lack of any specific details about the party's supposed achievements.")
+narrator("Player presents the letter to Captain Galen.")
+narrator("The letter was hastily wrote just a moment ago, and lack of any specific details about the party's supposed achievements.")
 Guard("*scans the letter* Hmm..., *displeased* This letter seems dubious at best. I find it hard to believe that a respected scholar would pen such a vague endorsement.")
 Player("*nervously* Captain, we are being honest in our intentions. We really do possess valuable knowledge and experiences to share.")
 Guard("*frowning* Words are cheap. If you truly have something to offer, then prove it with actions, not empty promises.")
@@ -58,3 +61,11 @@ Guard("Stop wasting my time. If you keep this up, I'll have you arrested for dis
 Player("We mean no harm, Captain. It seems diplomacy has failed us, but we won't back down from our mission. If you won't let us pass peacefully, we'll have no choice but to force our way through!")
 Guard("*angered* You dare threaten me in my own city? You'll regret that!")
 jump("Fight","Player stirred the guard after he explicitly threatened the player.")
+
+if __name__ == "__main__":
+    api_key=open("C:\\openai.txt").read()
+    url="https://api.openai.com/v1/chat/completions"
+    from chatgpt_api import init_chatgpt_api
+    init_chatgpt_api(api_key,url,debug_print_request=False,debug_print_response=False)
+    scenario_data=get_scenario_data()
+    example_game_loop(scenario_data)

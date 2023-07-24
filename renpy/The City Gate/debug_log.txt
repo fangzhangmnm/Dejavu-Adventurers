@@ -1,0 +1,964 @@
+﻿--- Mon Jul 24 01:21:50 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey hows going
+
+Performed roleplay query: Captain Galen: *narrows his eyes* I have no time for
+idle chit-chat. State your purpose or move along, traveler.
+Captain Galen
+Captain Galen: *narrows his eyes* I have no time for idle chit-chat. State
+your purpose or move along, traveler.
+
+Performed check outcome query: The conversation is ongoing, ONGOING
+Player
+hey hows going
+
+Player
+hey hows going
+
+--- Mon Jul 24 01:23:53 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+Sending roleplay query
+Performed roleplay query: *raises an eyebrow* Is that how you address a
+captain? Show some respect, traveler. Now, state your business and provide
+your documentation, or turn back from whence you came.
+Captain Galen
+*raises an eyebrow* Is that how you address a captain? Show some respect,
+traveler. Now, state your business and provide your documentation, or turn
+back from whence you came.
+
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Player
+hey
+
+Player
+hey
+
+Captain Galen
+*raises an eyebrow* Is that how you address a captain? Show some respect,
+traveler. Now, state your business and provide your documentation, or turn
+back from whence you came.
+
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+--- Mon Jul 24 01:25:39 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *sighs impatiently* Well, what is it?
+I haven't got all day. State your business and provide your documentation, or
+be on your way.
+Captain Galen
+Captain Galen: *sighs impatiently* Well, what is it? I haven't got all day.
+State your business and provide your documentation, or be on your way.
+
+retreived roll forward info: None
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Player
+hey
+
+retreived roll forward info: Captain Galen: *sighs impatiently* Well, what is
+it? I haven't got all day. State your business and provide your documentation,
+or be on your way.
+Captain Galen
+Captain Galen: *sighs impatiently* Well, what is it? I haven't got all day.
+State your business and provide your documentation, or be on your way.
+
+retreived roll forward info: None
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+--- Mon Jul 24 01:30:43 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen raises an eyebrow, unamused by the
+casual greeting. He looks at the adventurer with a stern expression. "I
+suggest you show some respect, traveler. Now, state your business and provide
+your documentation, or turn back from whence you came."
+Sending check outcome query
+--- Mon Jul 24 01:31:15 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+retreived roll forward info: None
+Sending roleplay query
+--- Mon Jul 24 01:32:07 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *narrows his eyes* "Hey" is not an
+appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* "Hey" is not
+an appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.', 'ONGOING', 'ongoing',
+'The conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* "Hey" is not
+an appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.', 'ONGOING', 'ongoing',
+'The conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* "Hey" is not
+an appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.', 'ONGOING', 'ongoing',
+'The conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* "Hey" is not
+an appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.', 'ONGOING', 'ongoing',
+'The conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* "Hey" is not
+an appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.', 'ONGOING', 'ongoing',
+'The conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* "Hey" is not
+an appropriate response. Show some respect, traveler. Now, state your business
+and provide your documentation, or be on your way.', 'ONGOING', 'ongoing',
+'The conversation is ongoing, ONGOING')
+Captain Galen
+Captain Galen: *narrows his eyes* "Hey" is not an appropriate response. Show
+some respect, traveler. Now, state your business and provide your
+documentation, or be on your way.
+
+--- Mon Jul 24 01:32:54 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *narrows his eyes* Show some respect,
+traveler! State your business and provide your documentation, or be on your
+way. I have no time for insolence.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Captain Galen
+Captain Galen: *narrows his eyes* Show some respect, traveler! State your
+business and provide your documentation, or be on your way. I have no time for
+insolence.
+
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Captain Galen
+Captain Galen: *narrows his eyes* Show some respect, traveler! State your
+business and provide your documentation, or be on your way. I have no time for
+insolence.
+
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Captain Galen
+Captain Galen: *narrows his eyes* Show some respect, traveler! State your
+business and provide your documentation, or be on your way. I have no time for
+insolence.
+
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Player
+hey
+
+retreived roll forward info: ('Captain Galen: *narrows his eyes* Show some
+respect, traveler! State your business and provide your documentation, or be
+on your way. I have no time for insolence.', 'ONGOING', 'ongoing', 'The
+conversation is ongoing, ONGOING')
+Captain Galen
+Captain Galen: *narrows his eyes* Show some respect, traveler! State your
+business and provide your documentation, or be on your way. I have no time for
+insolence.
+
+Player
+youtube
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *exasperated* Enough! I have no time
+for your meaningless babble. If you have nothing of value to say or provide,
+then leave immediately. This gate is not for your entertainment.
+Sending check outcome query
+Performed check outcome query: The player is being disrespectful and not
+providing any valid reason or documentation., ONGOING
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Captain Galen
+Captain Galen: *exasperated* Enough! I have no time for your meaningless
+babble. If you have nothing of value to say or provide, then leave
+immediately. This gate is not for your entertainment.
+
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Captain Galen
+Captain Galen: *exasperated* Enough! I have no time for your meaningless
+babble. If you have nothing of value to say or provide, then leave
+immediately. This gate is not for your entertainment.
+
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+Player
+youtube
+
+retreived roll forward info: ('Captain Galen: *exasperated* Enough! I have no
+time for your meaningless babble. If you have nothing of value to say or
+provide, then leave immediately. This gate is not for your entertainment.',
+'ONGOING', 'ongoing', 'The player is being disrespectful and not providing any
+valid reason or documentation., ONGOING')
+--- Mon Jul 24 01:35:17 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hgu
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Captain Galen
+*raises an eyebrow* What was that? I can't understand your mumbling. State
+your business clearly, or leave.
+
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Captain Galen
+*raises an eyebrow* What was that? I can't understand your mumbling. State
+your business clearly, or leave.
+
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Captain Galen
+*raises an eyebrow* What was that? I can't understand your mumbling. State
+your business clearly, or leave.
+
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Player
+hgu
+
+retreived roll forward info: ("*raises an eyebrow* What was that? I can't
+understand your mumbling. State your business clearly, or leave.", 'ONGOING',
+'ongoing', 'The conversation is ongoing, ONGOING')
+Captain Galen
+*raises an eyebrow* What was that? I can't understand your mumbling. State
+your business clearly, or leave.
+
+--- Mon Jul 24 01:36:14 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hey
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *raises an eyebrow* "Hey"? Is that the extent of
+your eloquence? I expect more respect from those who wish to enter the city.
+Now, state your business and provide your documentation, or be on your way.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Captain Galen
+*raises an eyebrow* "Hey"? Is that the extent of your eloquence? I expect more
+respect from those who wish to enter the city. Now, state your business and
+provide your documentation, or be on your way.
+
+Player
+you
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *narrows his eyes* You dare to
+address me with such insolence? I am Captain Galen, the guardian of this city
+gate. Show some respect or face the consequences. Now, state your business and
+provide your documentation, or be gone from my sight.
+Sending check outcome query
+--- Mon Jul 24 01:38:25 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *narrows eyes* Cut the pleasantries.
+I have no time for idle chit-chat. State your purpose and show me your
+documents, or turn back now.
+Sending check outcome query
+Performed check outcome query: The guard wants to examine the player's
+documents., Examine Documents
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: ('Captain Galen: *narrows eyes* Cut the
+pleasantries. I have no time for idle chit-chat. State your purpose and show
+me your documents, or turn back now.', 'Examine Documents', 'incident', "The
+guard wants to examine the player's documents., Examine Documents")
+Captain Galen
+Captain Galen: *narrows eyes* Cut the pleasantries. I have no time for idle
+chit-chat. State your purpose and show me your documents, or turn back now.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: ('Captain Galen: *narrows eyes* Cut the
+pleasantries. I have no time for idle chit-chat. State your purpose and show
+me your documents, or turn back now.', 'Examine Documents', 'incident', "The
+guard wants to examine the player's documents., Examine Documents")
+Captain Galen
+Captain Galen: *narrows eyes* Cut the pleasantries. I have no time for idle
+chit-chat. State your purpose and show me your documents, or turn back now.
+
+The guard examines your documents.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: ('Captain Galen: *narrows eyes* Cut the
+pleasantries. I have no time for idle chit-chat. State your purpose and show
+me your documents, or turn back now.', 'Examine Documents', 'incident', "The
+guard wants to examine the player's documents., Examine Documents")
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: ('Captain Galen: *narrows eyes* Cut the
+pleasantries. I have no time for idle chit-chat. State your purpose and show
+me your documents, or turn back now.', 'Examine Documents', 'incident', "The
+guard wants to examine the player's documents., Examine Documents")
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: ('Captain Galen: *narrows eyes* Cut the
+pleasantries. I have no time for idle chit-chat. State your purpose and show
+me your documents, or turn back now.', 'Examine Documents', 'incident', "The
+guard wants to examine the player's documents., Examine Documents")
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+hello nice to meet you
+
+retreived roll forward info: ('Captain Galen: *narrows eyes* Cut the
+pleasantries. I have no time for idle chit-chat. State your purpose and show
+me your documents, or turn back now.', 'Examine Documents', 'incident', "The
+guard wants to examine the player's documents., Examine Documents")
+Captain Galen
+Captain Galen: *narrows eyes* Cut the pleasantries. I have no time for idle
+chit-chat. State your purpose and show me your documents, or turn back now.
+
+The guard examines your documents.
+
+--- Mon Jul 24 01:43:52 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+nice to meet you
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen narrows his eyes, unimpressed by the
+adventurer's attempt at pleasantries. He crosses his arms over his chest and
+adopts a stern expression.   "You think a simple greeting will suffice? I am
+Captain Galen, the guardian of this city gate. I demand respect and proper
+documentation. Now, state your business and show me your papers."
+Sending check outcome query
+Performed check outcome query: The guard wants to examine the player's
+documents., Examine Documents
+Captain Galen
+Captain Galen narrows his eyes, unimpressed by the adventurer's attempt at
+pleasantries. He crosses his arms over his chest and adopts a stern
+expression.   "You think a simple greeting will suffice? I am Captain Galen,
+the guardian of this city gate. I demand respect and proper documentation.
+Now, state your business and show me your papers."
+
+The guard examines Adventurer's documents.
+
+--- Mon Jul 24 01:46:08 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+--- Mon Jul 24 01:47:40 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+Here is the document
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *examines the document with a scrutinizing eye*
+Hmm... This document seems incomplete. I cannot allow entry without the proper
+paperwork.
+Sending check outcome query
+Performed check outcome query: your reason, Examine Documents
+Captain Galen
+*examines the document with a scrutinizing eye* Hmm... This document seems
+incomplete. I cannot allow entry without the proper paperwork.
+
+The guard examines Adventurer's documents.
+
+--- Mon Jul 24 01:48:45 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+Here is the document
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *Captain Galen examines the document, his eyes
+narrowing as he looks for any possible flaw or discrepancy.* Hmph, this
+document is incomplete. It lacks the necessary seal of approval from the City
+Council. Entry denied.
+Sending check outcome query
+Performed check outcome query: The guard has requested to examine the player's
+documents., Examine Documents
+Captain Galen
+*Captain Galen examines the document, his eyes narrowing as he looks for any
+possible flaw or discrepancy.* Hmph, this document is incomplete. It lacks the
+necessary seal of approval from the City Council. Entry denied.
+
+The guard examines Adventurer's documents.
+
+--- Mon Jul 24 01:49:20 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+Here is the document
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *examines the document with a scrutinizing gaze*
+Hmph, this document seems to be missing a crucial seal. Entry denied.
+Sending check outcome query
+Performed check outcome query: The guard wants to examine the player's
+documents., Examine Documents
+The guard examines Adventurer's documents.
+
+Captain Galen
+*examines the document with a scrutinizing gaze* Hmph, this document seems to
+be missing a crucial seal. Entry denied.
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: Captain Galen: *smirking* You think a mere document
+will convince me? I have seen countless forgeries in my time. You'll have to
+do better than that to gain entry into our city.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+--- Mon Jul 24 01:50:09 2023
+
+--- Mon Jul 24 01:52:10 2023
+
+The player approaches the city gate, the gate is closed shut. The guard is
+standing in front of the gate.
+
+Captain Galen
+Halt! State your business and provide your documentation.
+
+Player
+Here is the document
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *snatches the document and examines it with a
+critical eye* This document is outdated! You expect me to let you through with
+this? I'm afraid not. You'll need to provide valid and up-to-date
+documentation if you want to enter the city.
+Sending check outcome query
+Performed check outcome query: The guard wants to examine the player's
+documents., Examine Documents
+Captain Galen
+*snatches the document and examines it with a critical eye* This document is
+outdated! You expect me to let you through with this? I'm afraid not. You'll
+need to provide valid and up-to-date documentation if you want to enter the
+city.
+
+The guard examines Adventurer's documents.
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *smirks* You think a little piece of paper will
+convince me? I am the gatekeeper of this city, and I decide who enters and who
+doesn't. If you want to get through, you'll have to offer something more
+substantial than a worthless document.
+Sending check outcome query
+Performed check outcome query: The guard is skeptical about the player's
+document and demands something more substantial., ONGOING
+Captain Galen
+*smirks* You think a little piece of paper will convince me? I am the
+gatekeeper of this city, and I decide who enters and who doesn't. If you want
+to get through, you'll have to offer something more substantial than a
+worthless document.
+
+Player
+We have important thing to tell the lord
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *laughs arrogantly* Important things, you say? And
+who are you to decide what's important? I am the gatekeeper, and I determine
+what matters. Unless you have something truly valuable to offer, you won't be
+getting past me.
+Sending check outcome query
+Performed check outcome query: The guard is skeptical of the player's document
+and demands something more valuable., ONGOING
+Captain Galen
+*laughs arrogantly* Important things, you say? And who are you to decide
+what's important? I am the gatekeeper, and I determine what matters. Unless
+you have something truly valuable to offer, you won't be getting past me.
+
+Player
+what about this bag of gold?
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *eyes widen at the sight of the bag of gold* Well,
+well, well... It seems you understand the power of persuasion. Hand over the
+gold, and I might consider letting you in. But remember, this is a one-time
+exception. Don't think you can bribe your way into the city every time.
+Sending check outcome query
+Performed check outcome query: The player has offered a bag of gold to the
+guard., Take Gold
+Captain Galen
+*eyes widen at the sight of the bag of gold* Well, well, well... It seems you
+understand the power of persuasion. Hand over the gold, and I might consider
+letting you in. But remember, this is a one-time exception. Don't think you
+can bribe your way into the city every time.
+
+Adventurer gives the guard 10 gold.
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: The player hands over the bag of gold to Captain
+Galen. Captain Galen inspects the gold, a sly smile crossing his face.
+Sending check outcome query
+Performed check outcome query: The conversation is ongoing, ONGOING
+Captain Galen
+The player hands over the bag of gold to Captain Galen. Captain Galen inspects
+the gold, a sly smile crossing his face.
+
+Player
+Can you let me pass now?
+
+retreived roll forward info: None
+Sending roleplay query
+Performed roleplay query: *counts the gold coins, a greedy gleam in his eyes*
+Very well. Consider yourself lucky, adventurer. You may enter the city this
+time. But remember, I expect to see more gold in the future if you wish to
+pass through again. Enjoy your stay in Eldoria... for now.
+Sending check outcome query
+Performed check outcome query: The guard has been bribed and allows the player
+to enter the city., Passed
+Captain Galen
+*counts the gold coins, a greedy gleam in his eyes* Very well. Consider
+yourself lucky, adventurer. You may enter the city this time. But remember, I
+expect to see more gold in the future if you wish to pass through again. Enjoy
+your stay in Eldoria... for now.
+
+You successfully enter the city.
+
+Good Ending
+
+--- Mon Jul 24 01:53:56 2023
+

@@ -1,32 +1,35 @@
-data={}
+import sys
+this=sys.modules[__name__]
 
-def say(character_name,content):
-    data['dialogue']['content'].append({
+this.data={}
+
+def say(character_name,content,**kwargs):
+    this.data['dialogue']['content'].append({
         'type':'dialogue',
         'character':character_name,
         'content':content,
     })
 
-def narrate(content):
-    data['dialogue']['content'].append({
+def narrator(content,**kwargs):
+    this.data['dialogue']['content'].append({
         'type':'narrate',
         'content':content,
     })
 
-def call(outcome_name,comment=""):
-    data['dialogue']['content'].append({
+def call(outcome_name,comment="",**kwargs):
+    this.data['dialogue']['content'].append({
         'type':'call',
         'outcome_name':outcome_name,
         'comment':comment,
     })
 
-def jump(outcome_name,comment=""):
-    data['dialogue']['outcome_name']=outcome_name
-    data['dialogue']['outcome_comment']=comment
+def jump(outcome_name,comment="",**kwargs):
+    this.data['dialogue']['outcome_name']=outcome_name
+    this.data['dialogue']['outcome_comment']=comment
 
-def scenario(name):
-    data.clear()
-    data['scenario']={
+def scenario(name,**kwargs):
+    this.data.clear()
+    this.data['scenario']={
         'name':name,
         'summary':"",
         'characters':[],
@@ -34,74 +37,89 @@ def scenario(name):
         'opening_dialogue':None,
         'example_dialogues':[],
     }
-    data['current']=data['scenario']
+    this.data['current']=this.data['scenario']
 
-def summary(content):
-    data['scenario']['summary']=content
+def summary(content,**kwargs):
+    this.data['scenario']['summary']=content
 
 
-def character(name,is_player=False):
-    data['character']={
+def character(name,is_player=False,payload=None,**kwargs):
+    this.data['character']={
         'name':name,
         'description':"",
         'personality':"",
         'is_player':is_player,
+        'payload':payload,
     }
-    data['scenario']['characters'].append(data['character'])
-    data['current']=data['character']
-    return lambda content: say(name,content)
+    this.data['scenario']['characters'].append(this.data['character'])
+    this.data['current']=this.data['character']
+    def character_say(content,**kwargs):
+        say(name,content)
+    return character_say
 
-def description(content):
-    data['character']['description']=content
+def description(content,**kwargs):
+    this.data['character']['description']=content
 
-def personality(content):   
-    data['character']['personality']=content
+def personality(content,**kwargs):   
+    this.data['character']['personality']=content
 
-def outcome(name,label=None,type='outcome'):
+def outcome(name,label=None,type='outcome',**kwargs):
     label=label or name
-    data['outcome']={
+    this.data['outcome']={
         'name':name,
         'label':label,
         'condition':"",
         'type':type,
     }
-    data['scenario']['outcomes'].append(data['outcome'])
-    data['current']=data['outcome']
+    this.data['scenario']['outcomes'].append(this.data['outcome'])
+    this.data['current']=this.data['outcome']
 
-def incident(name,label=None,once=True):
+def incident(name,label=None,once=True,**kwargs):
     outcome(name,label,type='incident')
-    data['outcome']['once']=once
+    this.data['outcome']['once']=once
 
-def condition(content):
-    data['outcome']['condition']=content
+def condition(content,**kwargs):
+    this.data['outcome']['condition']=content
 
 
-def opening_dialogue(name='Opening Dialogue'):
-    data['dialogue']={
+def opening_dialogue(name='Opening Dialogue',**kwargs):
+    this.data['dialogue']={
         'name':name,
         'description':"",
         'content':[],
     }
-    data['scenario']['opening_dialogue']=data['dialogue']
-    data['current']=data['dialogue']
+    this.data['scenario']['opening_dialogue']=this.data['dialogue']
+    this.data['current']=this.data['dialogue']
 
-def example_dialogue(name):
-    data['dialogue']={
+def example_dialogue(name,**kwargs):
+    this.data['dialogue']={
         'name':name,
         'description':"",
         'content':[],
         'outcome_name':"",
         'outcome_comment':"",
     }
-    data['scenario']['example_dialogues'].append(data['dialogue'])
-    data['current']=data['dialogue']
+    this.data['scenario']['example_dialogues'].append(this.data['dialogue'])
+    this.data['current']=this.data['dialogue']
 
 def get_scenario_data():
-    return data['scenario']
-
+    return this.data['scenario']
 
 def _find(arr,key):
     return next((x for x in arr if x['name']==key))
+
+def get_player_character_name():
+    return next(character["name"] for character in this.data['scenario']["characters"] if character["is_player"])
+
+def get_npc_names():
+    return [character["name"] for character in this.data['scenario']["characters"] if not character["is_player"]]
+
+def get_character_payload(character_name):
+    return _find(this.data['scenario']["characters"],character_name)["payload"]
+
+def get_outcome_label(outcome_name):
+    return _find(this.data['scenario']["outcomes"],outcome_name)["label"]
+
 
 NARRATOR_NAME="SYSTEM"
 ONGOING_OUTCOME_NAME="ONGOING"
@@ -180,23 +198,33 @@ def compose_check_outcome_request(scenario_data,history,remove_incidents=[]):
 
 
 def perform_roleplay_query(character_name,scenario,history):
-    from chatgpt_api import completion,purify_label
+    try:
+        from .chatgpt_api import completion
+    except ImportError:
+        from chatgpt_api import completion
     request=compose_roleplay_request(character_name,scenario,history)
     response=completion(request,temperature=0.5)
     return response[-1]["content"]
 
 def perform_check_outcome_query(scenario,history,removed_incidents=[]):
-    from chatgpt_api import completion,purify_label
+    try:
+        from .chatgpt_api import completion,purify_label
+    except ImportError:
+        from chatgpt_api import completion,purify_label
     request=compose_check_outcome_request(scenario,history,remove_incidents=removed_incidents)
     response=completion(request,temperature=0)
     response_text=response[-1]["content"]
     target_labels=[outcome["name"] for outcome in scenario["outcomes"]]+[ONGOING_OUTCOME_NAME]
-    outcome=purify_label(response_text,target_labels,default=ONGOING_OUTCOME_NAME)
-    return outcome, response_text
+    outcome_name=purify_label(response_text,target_labels,default=ONGOING_OUTCOME_NAME)
+    if outcome_name==ONGOING_OUTCOME_NAME:
+        outcome_type="ongoing"
+    else:
+        outcome_type=_find(scenario["outcomes"],outcome_name)["type"]
+    return outcome_name, outcome_type, response_text
 
 def example_game_loop(scenario):
-    player_character_name=next(character["name"] for character in scenario["characters"] if character["is_player"])
-    npc_names=[character["name"] for character in scenario["characters"] if not character["is_player"]]
+    player_character_name=get_player_character_name()
+    npc_names=get_npc_names()
     history=[]
     removed_incidents=[]
     def print_and_log(character_name,content):
@@ -227,15 +255,17 @@ def example_game_loop(scenario):
             for npc_name in npc_names:
                 npc_input=perform_roleplay_query(npc_name,scenario,history)
                 print_and_log(npc_name,npc_input)
-            outcome,outcome_comment=perform_check_outcome_query(scenario,history,removed_incidents=removed_incidents)
+            outcome_name,outcome_type,outcome_comment=perform_check_outcome_query(scenario,history,removed_incidents=removed_incidents)
             print("\033[90m"+outcome_comment+"\033[0m")
-            if outcome!=ONGOING_OUTCOME_NAME:
-                if _find(scenario["outcomes"],outcome)["type"]=="incident":
-                    print("\033[91m"+"Incident: "+outcome+"\033[0m")
-                    removed_incidents.append(outcome)
-                else:
-                    print("\033[91m"+"Outcome: "+outcome+"\033[0m")
-                    return outcome
+            if outcome_type=="incident":
+                print("\033[91m"+"Incident: "+outcome_name+"\033[0m")
+                removed_incidents.append(outcome_name)
+            elif outcome_type=="outcome":
+                print("\033[91m"+"Outcome: "+outcome_name+"\033[0m")
+                return outcome_name
+            else: #ongoing
+                pass
+
     except KeyboardInterrupt:
         return ONGOING_OUTCOME_NAME
 
@@ -270,6 +300,4 @@ if __name__=="__main__":
     url="https://api.openai.com/v1/chat/completions"
     from chatgpt_api import init_chatgpt_api
     init_chatgpt_api(api_key,url,debug_print_request=False,debug_print_response=False)
-
-
     example_game_loop(scenario_data)
