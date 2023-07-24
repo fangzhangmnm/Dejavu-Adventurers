@@ -8,7 +8,7 @@ Guard=character("Captain Galen")
 personality("greedy, stubborn, unreasonable, prideful, arrogant")
 description("Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.")
 
-Player=character("Adventurer")
+Player=character("Adventurer",is_player=True)
 
 outcome("Passed","label_passed")
 condition("The guard allows the player to enter the city.")
@@ -17,7 +17,7 @@ outcome("Fight","label_fight")
 condition("The conflict escalates and the guard attacks the player.")
 
 incident("Examine Documents","label_examine_documents")
-condition("The player provides the guard with a document.")
+condition("The guard want to examine the player's documents.")
 
 incident("Take Gold","label_take_gold")
 condition("The player gives the guard gold")

@@ -31,7 +31,7 @@ def completion(messages,temperature=1):
         "Authorization": f"Bearer {_api_key}"
     }
     data = {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-3.5-turbo-0613",
         "temperature": temperature,
         "messages": messages
     }

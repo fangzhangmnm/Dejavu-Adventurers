@@ -5,12 +5,14 @@
         {
             "name": "Captain Galen",
             "description": "Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.",
-            "personality": "greedy, stubborn, unreasonable, prideful, arrogant"
+            "personality": "greedy, stubborn, unreasonable, prideful, arrogant",
+            "is_player": false
         },
         {
             "name": "Adventurer",
             "description": "",
-            "personality": ""
+            "personality": "",
+            "is_player": true
         }
     ],
     "outcomes": [
@@ -30,13 +32,15 @@
             "name": "Examine Documents",
             "label": "label_examine_documents",
             "condition": "The player provides the guard with a document.",
-            "type": "incident"
+            "type": "incident",
+            "once": true
         },
         {
             "name": "Take Gold",
             "label": "label_take_gold",
             "condition": "The player gives the guard gold",
-            "type": "incident"
+            "type": "incident",
+            "once": true
         }
     ],
     "opening_dialogue": {

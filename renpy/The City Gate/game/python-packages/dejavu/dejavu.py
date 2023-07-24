@@ -40,11 +40,12 @@ def summary(content):
     data['scenario']['summary']=content
 
 
-def character(name):
+def character(name,is_player=False):
     data['character']={
         'name':name,
         'description':"",
         'personality':"",
+        'is_player':is_player,
     }
     data['scenario']['characters'].append(data['character'])
     data['current']=data['character']
@@ -67,8 +68,9 @@ def outcome(name,label=None,type='outcome'):
     data['scenario']['outcomes'].append(data['outcome'])
     data['current']=data['outcome']
 
-def incident(name,label=None):
-    return outcome(name,label,type='incident')
+def incident(name,label=None,once=True):
+    outcome(name,label,type='incident')
+    data['outcome']['once']=once
 
 def condition(content):
     data['outcome']['condition']=content
@@ -149,12 +151,16 @@ def compose_roleplay_request(character_name,scenario_data,history=[]):
 
 
 
-def compose_check_outcome_request(scenario_data,history):
+def compose_check_outcome_request(scenario_data,history,remove_incidents=[]):
     request=[]
     prompt="Please read the dialogue of a role playing game and determine whether a certain condition is reached.\n\n"
     for i,outcome in enumerate(scenario_data["outcomes"]):
-        prompt+="{id}. if {condition}, then reply \"REASON, {outcome_name}\"\n".format(id=i,condition=outcome["condition"],outcome_name=outcome["name"])
-    prompt+="{id}. For most of the cases, the dialogue need to be follow up, please reply \"your reason, {outcome_name}\"\n".format(id=len(scenario_data["outcomes"]),outcome_name=ONGOING_OUTCOME_NAME)
+        if outcome['name'] in remove_incidents: continue
+        if outcome['type']=='incident':
+            prompt+="{id}. when {condition}, then reply \"your reason, {outcome_name}\"\n".format(id=i,condition=outcome["condition"],outcome_name=outcome["name"])
+        else:
+            prompt+="{id}. if you are sure that the conversation ends with {condition}, then reply \"your reason, {outcome_name}\"\n".format(id=i,condition=outcome["condition"],outcome_name=outcome["name"])
+    prompt+="{id}. For most of the cases, the dialogue need to be follow up, please reply \"The conversation is ongoing, {outcome_name}\"\n".format(id=len(scenario_data["outcomes"]),outcome_name=ONGOING_OUTCOME_NAME)
     request.append({"role": "system", "content": prompt})
 
     for i,example_dialogue in enumerate(scenario_data["example_dialogues"]):
@@ -173,29 +179,30 @@ def compose_check_outcome_request(scenario_data,history):
     return request
 
 
-def example_game_loop(player_character,npcs,scenario):
+def perform_roleplay_query(character_name,scenario,history):
     from chatgpt_api import completion,purify_label
+    request=compose_roleplay_request(character_name,scenario,history)
+    response=completion(request,temperature=0.5)
+    return response[-1]["content"]
 
-    def perform_roleplay(character_name,scenario,history):
-        request=compose_roleplay_request(character_name,scenario,history)
-        response=completion(request,temperature=0.5)
-        return response[-1]["content"]
+def perform_check_outcome_query(scenario,history,removed_incidents=[]):
+    from chatgpt_api import completion,purify_label
+    request=compose_check_outcome_request(scenario,history,remove_incidents=removed_incidents)
+    response=completion(request,temperature=0)
+    response_text=response[-1]["content"]
+    target_labels=[outcome["name"] for outcome in scenario["outcomes"]]+[ONGOING_OUTCOME_NAME]
+    outcome=purify_label(response_text,target_labels,default=ONGOING_OUTCOME_NAME)
+    return outcome, response_text
 
-    def perform_check_outcome(scenario,history):
-        request=compose_check_outcome_request(scenario,history)
-        response=completion(request,temperature=0)
-        response_text=response[-1]["content"]
-        target_labels=[outcome["name"] for outcome in scenario["outcomes"]]+[ONGOING_OUTCOME_NAME]
-        outcome=purify_label(response_text,target_labels,default=ONGOING_OUTCOME_NAME)
-        return outcome, response_text
-
-
-
+def example_game_loop(scenario):
+    player_character_name=next(character["name"] for character in scenario["characters"] if character["is_player"])
+    npc_names=[character["name"] for character in scenario["characters"] if not character["is_player"]]
     history=[]
+    removed_incidents=[]
     def print_and_log(character_name,content):
         print("\033[92m"+character_name+"\033[0m"+": "+"\033[94m"+content+"\033[0m")
-        history.append({"character": character_name, "content": content})
-    for item in scenario["opening_dialogue"]:
+        history.append({"type":"dialogue","character": character_name, "content": content})
+    for item in scenario["opening_dialogue"]["content"]:
         if item["type"]=="dialogue":
             print_and_log(item["character"],item["content"])
         elif item["type"]=="narrate":
@@ -205,24 +212,27 @@ def example_game_loop(player_character,npcs,scenario):
             player_input=None
             while player_input is None:
                 player_input=input("Your reply: ")
-            if player_input=="exit":
+            if player_input.lower() in ["quit","exit"]:
                 return ONGOING_OUTCOME_NAME
             elif "\me " in player_input:
                 dialogue,action=player_input.split("\me ")
                 if len(dialogue.strip())>0:
-                    print_and_log(player_character["name"],dialogue)
+                    print_and_log(player_character_name,dialogue)
                 if len(action.strip())>0:
-                    print_and_log(NARRATOR_NAME,player_character["name"]+" "+action)
+                    print_and_log(NARRATOR_NAME,player_character_name+" "+action)
+            elif player_input.startswith("\gm "):
+                print_and_log(NARRATOR_NAME,player_input[4:])
             else:
-                print_and_log(player_character["name"],player_input)
-            for npc in npcs:
-                npc_input=perform_roleplay(npc,scenario,history)
-                print_and_log(npc["name"],npc_input)
-            outcome,outcome_comment=perform_check_outcome(scenario,history)
-            # print("\033[91m"+outcome_comment+"\033[0m")
+                print_and_log(player_character_name,player_input)
+            for npc_name in npc_names:
+                npc_input=perform_roleplay_query(npc_name,scenario,history)
+                print_and_log(npc_name,npc_input)
+            outcome,outcome_comment=perform_check_outcome_query(scenario,history,removed_incidents=removed_incidents)
+            print("\033[90m"+outcome_comment+"\033[0m")
             if outcome!=ONGOING_OUTCOME_NAME:
                 if _find(scenario["outcomes"],outcome)["type"]=="incident":
                     print("\033[91m"+"Incident: "+outcome+"\033[0m")
+                    removed_incidents.append(outcome)
                 else:
                     print("\033[91m"+"Outcome: "+outcome+"\033[0m")
                     return outcome
@@ -260,3 +270,6 @@ if __name__=="__main__":
     url="https://api.openai.com/v1/chat/completions"
     from chatgpt_api import init_chatgpt_api
     init_chatgpt_api(api_key,url,debug_print_request=False,debug_print_response=False)
+
+
+    example_game_loop(scenario_data)

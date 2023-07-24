@@ -1,7 +1,7 @@
 [
     {
         "role": "system",
-        "content": "Please read the dialogue of a role playing game and determine whether a certain condition is reached.\n\n0. if The guard allows the player to enter the city., then reply \"REASON, Passed\"\n1. if The conflict escalates and the guard attacks the player., then reply \"REASON, Fight\"\n2. if The player provides the guard with a document., then reply \"REASON, Examine Documents\"\n3. if The player gives the guard gold, then reply \"REASON, Take Gold\"\n4. For most of the cases, the dialogue need to be follow up, please reply \"your reason, ONGOING\"\n"
+        "content": "Please read the dialogue of a role playing game and determine whether a certain condition is reached.\n\n0. if you are sure that the conversation ends with The guard allows the player to enter the city., then reply \"your reason, Passed\"\n1. if you are sure that the conversation ends with The conflict escalates and the guard attacks the player., then reply \"your reason, Fight\"\n2. when The player provides the guard with a document., then reply \"your reason, Examine Documents\"\n3. when The player gives the guard gold, then reply \"your reason, Take Gold\"\n4. For most of the cases, the dialogue need to be follow up, please reply \"The conversation is ongoing, ONGOING\"\n"
     },
     {
         "role": "system",
