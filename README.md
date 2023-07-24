@@ -1,5 +1,7 @@
 # Dejavu: Chat with AI in your adventure game with prescripted script.
 
+**With Renpy Support**
+
 It has been proven that Large Language Models such as ChatGPT are able to perform role playing tasks. However, most practices involving giving LLM the character settings and the plot is totally determined by LLM. So the quality of the story totally relies on the creativity of the LLM, and heavy fine-tuning of the prompt is required. 
 
 Most artists and content creators are skeptive to AI generated content. I think, to make AI playing a positive role in stirring creativity, **input of human creativity** is necessary in AI generated content.
@@ -12,43 +14,45 @@ In machine learning jargon, this method is called "Few Shot Learning". By few sh
 
 ## Example:
 
-### Input
+![screenshot](readme_files/recording1.gif)
 
-```python
-Guard=character("Captain Galen")
-personality("greedy, stubborn, unreasonable, pride, arrogant")
-description("Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.")
+### Example Code (Ren'Py)
 
-demo_scenario=scenario("Guard Challenge")
-description("The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy.")
+```py
 
-outcome("Passed", "The guard allows the player to enter the city.")
-outcome("Fight", "The conflict escalates and the guard attacks the player.")
+# The following dialogue examples feed the AI with different possibilities of storylines, to make it understand the desired plot and writing style
 
-narrate("The player approaches the city gate, the gate is closed shut. The guard is standing in front of the gate.")
-Guard("Halt! State your business and provide your documentation.")
+dejavu.example_dialogue "A bribe"
+Player "No worries, Captain. Here is the document"
+Guard "Give me the document. *impatiently* I don't have all day."
+dejavu.call "Examine Documents" ("Player claims to have a proper document.") # Here AI will learn to ask the game engine to provide information about the document
+dejavu.narrator "Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities."
+Guard "*examines the documents* Hmm... *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied."
+Player "Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria."
+Guard "*skeptical* Undead, you say? That's not an excuse to bypass the city's regulations."
+Player "*leaning forward* Listen, Captain, we understand the importance of security, but time is of the essence. Lives are at stake. Surely, there must be something we can do to gain entry?"
+Guard "*crossing arms* I'm afraid not. Our rules are strict for a reason."
+Player "*sincerely* Captain Galen, please. We risked our lives to bring this information. Surely, the safety of the city is worth bending the rules a bit."
+Guard "*stern* Rules are rules. If you can't abide by them, then leave."
+Player "Captain, we understand the importance of your duty. Would a little compensation help you look the other way, just this once?"
+Guard "*raised eyebrow* Hugh? What are you implying?"
+dejavu.call "Take Item" ("player agrees to bribe the guard.")
+dejavu.narrator "Player offers a pouch of gold to Captain Galen."
+Guard "*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out."
+dejavu.jump "Passed" ("Player have a proper document, a convincing reason and have bribed the guard.") # AI will determine which outcome the player achieved!
 
-example_dialogue("A bribe")
-Player("No worries, Captain. We have all the proper documents right here.")
-# ......
-outcome("Passed","Player have a proper document, a convincing reason and have bribed the guard.")
+label .take_item:
+    $item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
+    if item=="no":
+        history_narrator "Adventurer refuses to give the item" # The Guard will get mad at that.
+    else:
+        history_narrator "Adventurer gives [item] to the guard"
+        "You lose [item]!" 
+        # player.item--
+    return
 
-example_dialogue("A failed persuasion which leads to a fight")
-# ......
-```
-
-### Result
-
-```
-SYSTEM: The player approaches the city gate,the gate is closed shut. The guard is standing in front of the gate.Captain Galen: Halt! State your business and provide your documentation.
-
-Your reply: I'm the king of Eldoria.
-
-Captain Galen: "laughs heartily* The king of Eldoria, you say? Mel, if you're the king, then I must be the queen! Mice try, but I'm not falling for yourtricks. Now, state your real purpose for entering the city, or turn back where you came from.
-
-Your reply: \me deactive the magical disguise. Adventurer showed his true form, He is actually the king of Eldoria
-
-Captain Galen: *stares in disbelief* You... you're actually the king of Eldoria? I...I apologize, Your Majesty. I had no idea. please forgive my earlier remarks. Allow me to open the gates for you immediately.
-
-Outcome: Passed
+label .passed:
+    "You successfully enter the city."
+    "Good Ending"
+    return
 ```

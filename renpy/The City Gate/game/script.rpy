@@ -136,10 +136,12 @@ label city_gate:
     dejavu.narrator "The player approaches the city gate, the gate is closed shut. The guard is standing in front of the gate."
     Guard "Halt! State your business and provide your documentation."
 
+    # The following dialogue examples feed the AI with different possibilities of storylines, to make it understand the desired plot and writing style
+
     dejavu.example_dialogue "A bribe"
     Player "No worries, Captain. Here is the document"
     Guard "Give me the document. *impatiently* I don't have all day."
-    dejavu.call "Examine Documents" ("Player claims to have a proper document.")
+    dejavu.call "Examine Documents" ("Player claims to have a proper document.") # Here AI will learn to ask the game engine to provide information about the document
     dejavu.narrator "Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities."
     Guard "*examines the documents* Hmm... *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied."
     Player "Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria."
@@ -153,7 +155,7 @@ label city_gate:
     dejavu.call "Take Item" ("player agrees to bribe the guard.")
     dejavu.narrator "Player offers a pouch of gold to Captain Galen."
     Guard "*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out."
-    dejavu.jump "Passed" ("Player have a proper document, a convincing reason and have bribed the guard.")
+    dejavu.jump "Passed" ("Player have a proper document, a convincing reason and have bribed the guard.") # AI will determine which outcome the player achieved!
 
     dejavu.example_dialogue "A failed persuasion which leads to a fight"
     Player "*smiling confidently* Greetings, Captain Galen. We come as Emissaries from a distant land, seeking to share tales of adventure and knowledge with the people of Eldoria."
@@ -171,13 +173,6 @@ label city_gate:
     Player "We mean no harm, Captain. It seems diplomacy has failed us, but we won't back down from our mission. If you won't let us pass peacefully, we'll have no choice but to force our way through!"
     Guard "*angered* You dare threaten me in my own city? You'll regret that!"
     dejavu.jump "Fight" ("Player stirred the guard after he explicitly threatened the player.")
-
-
-
-
-    python:
-        scenario_data=dejavu.get_scenario_data()
-
 
     call ai_dialogue_loop from city_gate_1
 
@@ -200,12 +195,13 @@ label .examine_documents:
     return
 
 label .take_item:
-    $item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000)
+    $item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
     if item=="no":
-        history_narrator "Adventurer refuses to give the item"
+        history_narrator "Adventurer refuses to give the item" # The Guard will get mad at that.
     else:
         history_narrator "Adventurer gives [item] to the guard"
         "You lose [item]!"
+        # player.item--
     return
 
     
