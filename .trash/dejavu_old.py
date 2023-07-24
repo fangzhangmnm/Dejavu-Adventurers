@@ -214,7 +214,7 @@ def get_scenario_object(name_or_object_or_dict):
 #========== Example Adventure Book ==========
 
 Guard=character("Captain Galen")
-personality("greedy, stubborn, unreasonable, pride, arrogant")
+personality("greedy, stubborn, unreasonable, prideful, arrogant")
 description("Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.")
 
 npcs=[Guard]
