@@ -1,14 +1,25 @@
 import sys
 this=sys.modules[__name__]
 
-
 this.scenario_data=None
-this._p={}
+this.current={}
 
+def export_state():
+    return {'scenario_data':this.scenario_data,'current':this.current}
 
+def import_state(state:'dict|None'):
+    if state is None: this.scenario_data,this.current=None,{}; return
+    this.scenario_data=state['scenario_data']
+    this.current=state['current']
+
+def get_object(path):
+    p=this.scenario_data
+    for key in path:
+        p=p[key]
+    return p
 
 def say(character_name,content,history=None,):
-    history=history or this._pdialogue['content']
+    history=history or get_object(this.current['dialogue'])['content']
     history.append({
         'type':'dialogue',
         'character':character_name,
@@ -16,14 +27,14 @@ def say(character_name,content,history=None,):
     })
 
 def narrator(content,history=None):
-    history=history or this._pdialogue['content']
+    history=history or get_object(this.current['dialogue'])['content']
     history.append({
         'type':'narrate',
         'content':content,
     })
 
 def call(outcome_name,comment="",history=None):
-    history=history or this._pdialogue['content']
+    history=history or get_object(this.current['dialogue'])['content']
     history.append({
         'type':'call',
         'outcome_name':outcome_name,
@@ -31,8 +42,9 @@ def call(outcome_name,comment="",history=None):
     })
 
 def jump(outcome_name,comment=""):
-    this._pdialogue['outcome_name']=outcome_name
-    this._pdialogue['outcome_comment']=comment
+    dialogue=get_object(this.current['dialogue'])
+    dialogue['outcome_name']=outcome_name
+    dialogue['outcome_comment']=comment
 
 def scenario(name):
     this.scenario_data={
@@ -44,65 +56,67 @@ def scenario(name):
         'example_dialogues':{},
         'player_character_name':None,
     }
-    this._p=this.scenario_data
 
 def load_scenario(scenario_data):
     this.scenario_data=scenario_data
-    this._p=this.scenario_data
 
 def summary(content):
     this.scenario_data['summary']=content
 
 
 def character(name,is_player=False):
-    this._p=this._pcharacter=this.scenario_data['characters'].setdefault(name,{
+    this.scenario_data['characters'].setdefault(name,{
         'name':name,
         'description':"",
         'personality':"",
     })
+    this.current['character']=('characters',name)
     if is_player:
         this.scenario_data['player_character_name']=name
     return lambda content: say(name,content)
 
 def description(content):
-    this._pcharacter['description']=content
+    character=get_object(this.current['character'])
+    character['description']=content
 
 def personality(content):   
-    this._pcharacter['personality']=content
+    character=get_object(this.current['character'])
+    character['personality']=content
 
-def outcome(name,label=None,type='outcome'):
-    this._p=this._poutcome=this.scenario_data['outcomes'].setdefault(name,{
+def outcome(name,label=None,type='outcome',once=False):
+    this.scenario_data['outcomes'].setdefault(name,{
         'name':name,
         'label':label or name,
         'condition':"",
         'type':type,
     })
+    this.current['outcome']=('outcomes',name)
 
 def incident(name,label=None,once=True):
-    outcome(name,label,type='incident')
-    this._poutcome['once']=once
+    outcome(name,label,type='incident',once=once)
 
 def condition(content):
-    this._poutcome['condition']=content
+    outcome=get_object(this.current['outcome'])
+    outcome['condition']=content
 
 
 def opening_dialogue(name='Opening'):
-    this._p=this._pdialogue=this.scenario_data['opening_dialogue']={
+    this.scenario_data['opening_dialogue']={
         'name':name,
         'description':"",
         'content':[],
     }
+    this.current['dialogue']=('opening_dialogue',)
 
 def example_dialogue(name):
-    this._p=this._pdialogue=this.scenario_data['example_dialogues'].setdefault(name,{
+    this.scenario_data['example_dialogues'].setdefault(name,{
         'name':name,
         'description':"",
         'content':[],
         'outcome_name':"",
         'outcome_comment':"",
     })
-
-
+    this.current['dialogue']=('example_dialogues',name)
 
 
 NARRATOR_NAME="SYSTEM"
