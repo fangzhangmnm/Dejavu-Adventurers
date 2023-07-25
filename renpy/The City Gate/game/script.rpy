@@ -14,91 +14,115 @@ init python hide:
         for line in json.dumps(obj,indent=4).split("\n"):
             renpy.log(line)
     renpy.log_object=log_object
-    class DejavuSayer:
-        def __init__(self,func):
-            self.func=func
-        def __call__(self,*args,**kwargs):
-            renpy.log("Before State")
-            renpy.log_object(dejavu.state)
-            dejavu.api.import_state(dejavu.state)
-            result=self.func(*args,**kwargs)
-            dejavu.state=dejavu.api.export_state()
-            renpy.log("After State")
-            renpy.log_object(dejavu.state)
-            return result
-    dejavu.persistent=lambda func:DejavuSayer(func)
-    renpy_say=renpy.say
-    def say(who,what,*args,**kwargs):
-        if isinstance(who,DejavuSayer):
-            who(what,*args,**kwargs)
-        else:
-            if dejavu.say_to_history or dejavu.say_to_dejavu:
-                renpy.log("Before State")
-                renpy.log_object(dejavu.state)
-                dejavu.api.import_state(dejavu.state)
-                get_name=lambda who:str(who) if who is not None else dejavu.api.NARRATOR_NAME
-                if dejavu.say_to_history:
-                    dejavu.api.say(get_name(who),what,history=dejavu.history)
-                if dejavu.say_to_dejavu:
-                    dejavu.api.say(get_name(who),what)
-                dejavu.state=dejavu.api.export_state()
-                renpy.log("After State")
-                renpy.log_object(dejavu.state)
-            if dejavu.say_to_renpy:
-                renpy_say(who,what,*args,**kwargs)
-    renpy.say=say
 init python:
-    @dejavu.persistent
-    def call(outcome_name,comment="", *args, **kwargs):
-        if dejavu.say_to_history:
-            dejavu.api.call(outcome_name,comment=comment,history=dejavu.history)
-        if dejavu.say_to_dejavu:
-            dejavu.api.call(outcome_name,comment=comment)
-    @dejavu.persistent
-    def jump_outcome(outcome_name,comment="", *args, **kwargs):
-        dejavu.api.jump(outcome_name,comment=comment)
-    @dejavu.persistent
-    def scenario(name, *args, **kwargs):
-        dejavu.scenario_data=dejavu.api.scenario(name)
-        dejavu.say_to_renpy,dejavu.say_to_history,dejavu.say_to_dejavu=False,False,False
-    @dejavu.persistent
-    def end_scenario(*args, **kwargs):
-        dejavu.say_to_renpy,dejavu.say_to_history,dejavu.say_to_dejavu=True,False,False
-    @dejavu.persistent
-    def summary(content, *args, **kwargs):
-        dejavu.api.summary(content)
-    @dejavu.persistent
-    def AICharacter(name, *args, **kwargs):
-        dejavu.api.character(name,is_player=False)
-        return Character(name, *args, **kwargs)
-    @dejavu.persistent
-    def PlayerCharacter(name, *args, **kwargs):
-        dejavu.api.character(name,is_player=True)
-        return Character(name, *args, **kwargs)
-    @dejavu.persistent
-    def description(content, *args, **kwargs):
-        dejavu.api.description(content)
-    @dejavu.persistent
-    def personality(content, *args, **kwargs):
-        dejavu.api.personality(content)
-    @dejavu.persistent
-    def outcome(name,label=None,*args, **kwargs):
-        dejavu.api.outcome(name,label=label)
-    @dejavu.persistent
-    def incident(name,label=None,once=True,*args, **kwargs):
-        dejavu.api.incident(name,label=label,once=once)
-    @dejavu.persistent
-    def condition(name,*args, **kwargs):
-        dejavu.api.condition(name)
-    @dejavu.persistent
-    def opening_dialogue(name='Opening',*args, **kwargs):
-        dejavu.api.opening_dialogue(name)
-        dejavu.say_to_renpy,dejavu.say_to_history,dejavu.say_to_dejavu=True,True,True
-    @dejavu.persistent
-    def example_dialogue(name,*args, **kwargs):
-        dejavu.api.example_dialogue(name)
-        dejavu.say_to_renpy,dejavu.say_to_history,dejavu.say_to_dejavu=False,False,True
     
+
+    NARRATOR_NAME="SYSTEM"
+    ONGOING_OUTCOME_NAME="ONGOING"
+
+    def _say(character_name,content,history=None,):
+        history=history or get_object(dejavu.current['dialogue'])['content']
+        history.append({
+            'type':'dialogue',
+            'character':character_name,
+            'content':content,
+        })
+
+    def _character(name):
+        dejavu.scenario_data['characters'].setdefault(name,{
+            'name':name,
+            'description':"",
+            'personality':"",
+        })
+        dejavu.current['character']=('characters',name)
+        return lambda content: _say(name,content)
+
+    def narrator(content,history=None):
+        history=history or get_object(dejavu.current['dialogue'])['content']
+        history.append({
+            'type':'narrate',
+            'content':content,
+        })
+
+    def call(outcome_name,comment="",history=None):
+        history=history or get_object(dejavu.current['dialogue'])['content']
+        history.append({
+            'type':'call',
+            'outcome_name':outcome_name,
+            'comment':comment,
+        })
+
+    def jump(outcome_name,comment=""):
+        dialogue=get_object(dejavu.current['dialogue'])
+        dialogue['outcome_name']=outcome_name
+        dialogue['outcome_comment']=comment
+
+    def scenario(name):
+        dejavu.scenario_data={
+            'name':name,
+            'summary':"",
+            'characters':{},
+            'outcomes':{},
+            'opening_dialogue':None,
+            'example_dialogues':{},
+            'player_character_name':None,
+        }
+
+    def summary(content):
+        dejavu.scenario_data['summary']=content
+
+    def AICharacter(name):
+        return _character(name)
+
+    def PlayerCharacter(name):
+        dejavu.scenario_data['player_character_name']=name
+        return _character(name)
+
+    def description(content):
+        character=get_object(dejavu.current['character'])
+        character['description']=content
+
+    def personality(content):   
+        character=get_object(dejavu.current['character'])
+        character['personality']=content
+
+    def _outcome(name,label=None,type='outcome',once=False):
+        dejavu.scenario_data['outcomes'].setdefault(name,{
+            'name':name,
+            'label':label or name,
+            'condition':"",
+            'type':type,
+        })
+        dejavu.current['outcome']=('outcomes',name)
+
+    def outcome(name,label=None):
+        _outcome(name,label,type='outcome')
+
+    def incident(name,label=None,once=True):
+        _outcome(name,label,type='incident',once=once)
+
+    def condition(content):
+        outcome=get_object(dejavu.current['outcome'])
+        outcome['condition']=content
+
+
+    def opening_dialogue(name='Opening'):
+        dejavu.scenario_data['opening_dialogue']={
+            'name':name,
+            'description':"",
+            'content':[],
+        }
+        dejavu.current['dialogue']=('opening_dialogue',)
+
+    def example_dialogue(name):
+        dejavu.scenario_data['example_dialogues'].setdefault(name,{
+            'name':name,
+            'description':"",
+            'content':[],
+            'outcome_name':"",
+            'outcome_comment':"",
+        })
+        dejavu.current['dialogue']=('example_dialogues',name)
 
 label start:
     scenario "Demo Scenario"

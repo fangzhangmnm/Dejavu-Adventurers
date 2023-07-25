@@ -1,40 +1,69 @@
+# TODO fix example game loop
+
+
+
+
 import sys
-this=sys.modules[__name__]
+dejavu=sys.modules[__name__]
 
-this.scenario_data=None
-this.current={}
+# ========= States ==========
 
-def export_state():
-    return {'scenario_data':this.scenario_data,'current':this.current}
+dejavu.scenario_data=None
+dejavu.current={}
+dejavu.state="disabled"
 
-def import_state(state:'dict|None'):
-    if state is None: this.scenario_data,this.current=None,{}; return
-    this.scenario_data=state['scenario_data']
-    this.current=state['current']
+from typing import Literal
+
 
 def get_object(path):
-    p=this.scenario_data
+    p=dejavu.scenario_data
     for key in path:
         p=p[key]
     return p
 
-def say(character_name,content,history=None,):
-    history=history or get_object(this.current['dialogue'])['content']
-    history.append({
+def get_scenario_data():
+    return dejavu.scenario_data
+
+
+# ========= DSL =========
+
+NARRATOR_NAME="SYSTEM"
+ONGOING_OUTCOME_NAME="ONGOING"
+
+def set_state(state:'Literal["disabled", "opening_dialogue","example_dialogue","playing"]'):
+    assert state in ["disabled", "opening_dialogue","example_dialogue","playing"]
+    dejavu.state=state
+
+def write_dialogue(character_name,content,destination=None):
+    destination=destination or get_object(dejavu.current['dialogue'])['content']
+    destination.append({
         'type':'dialogue',
         'character':character_name,
         'content':content,
     })
 
+def character(name,is_player=False):
+    dejavu.scenario_data['characters'].setdefault(name,{
+        'name':name,
+        'description':"",
+        'personality':"",
+    })
+    dejavu.current['character']=('characters',name)
+    if is_player:
+        dejavu.scenario_data['player_character_name']=name
+    else:
+        dejavu.scenario_data['npc_names'].append(name)
+    return lambda content: say(name,content)
+
 def narrator(content,history=None):
-    history=history or get_object(this.current['dialogue'])['content']
+    history=history or dejavu.get_object(dejavu.current['dialogue'])['content']
     history.append({
         'type':'narrate',
         'content':content,
     })
 
 def call(outcome_name,comment="",history=None):
-    history=history or get_object(this.current['dialogue'])['content']
+    history=history or dejavu.get_object(dejavu.current['dialogue'])['content']
     history.append({
         'type':'call',
         'outcome_name':outcome_name,
@@ -42,12 +71,12 @@ def call(outcome_name,comment="",history=None):
     })
 
 def jump(outcome_name,comment=""):
-    dialogue=get_object(this.current['dialogue'])
+    dialogue=dejavu.get_object(dejavu.current['dialogue'])
     dialogue['outcome_name']=outcome_name
     dialogue['outcome_comment']=comment
 
 def scenario(name):
-    this.scenario_data={
+    dejavu.scenario_data={
         'name':name,
         'summary':"",
         'characters':{},
@@ -55,72 +84,68 @@ def scenario(name):
         'opening_dialogue':None,
         'example_dialogues':{},
         'player_character_name':None,
+        'npc_names':[],
+        'history':[],
     }
 
-def load_scenario(scenario_data):
-    this.scenario_data=scenario_data
+def end_scenario():
+    dejavu.set_state("disabled")
 
 def summary(content):
-    this.scenario_data['summary']=content
+    dejavu.scenario_data['summary']=content
 
+def AICharacter(name):
+    character(name)
 
-def character(name,is_player=False):
-    this.scenario_data['characters'].setdefault(name,{
-        'name':name,
-        'description':"",
-        'personality':"",
-    })
-    this.current['character']=('characters',name)
-    if is_player:
-        this.scenario_data['player_character_name']=name
-    return lambda content: say(name,content)
+def PlayerCharacter(name):
+    dejavu.scenario_data['player_character_name']=name
+    character(name)
 
 def description(content):
-    character=get_object(this.current['character'])
+    character=dejavu.get_object(dejavu.current['character'])
     character['description']=content
 
 def personality(content):   
-    character=get_object(this.current['character'])
+    character=dejavu.get_object(dejavu.current['character'])
     character['personality']=content
 
 def outcome(name,label=None,type='outcome',once=False):
-    this.scenario_data['outcomes'].setdefault(name,{
+    dejavu.scenario_data['outcomes'].setdefault(name,{
         'name':name,
         'label':label or name,
         'condition':"",
         'type':type,
     })
-    this.current['outcome']=('outcomes',name)
+    dejavu.current['outcome']=('outcomes',name)
 
 def incident(name,label=None,once=True):
     outcome(name,label,type='incident',once=once)
 
 def condition(content):
-    outcome=get_object(this.current['outcome'])
+    outcome=dejavu.get_object(dejavu.current['outcome'])
     outcome['condition']=content
 
-
 def opening_dialogue(name='Opening'):
-    this.scenario_data['opening_dialogue']={
+    dejavu.scenario_data['opening_dialogue']={
         'name':name,
         'description':"",
         'content':[],
     }
-    this.current['dialogue']=('opening_dialogue',)
+    dejavu.current['dialogue']=('opening_dialogue',)
+    dejavu.set_state("opening_dialogue")
 
 def example_dialogue(name):
-    this.scenario_data['example_dialogues'].setdefault(name,{
+    dejavu.scenario_data['example_dialogues'].setdefault(name,{
         'name':name,
         'description':"",
         'content':[],
         'outcome_name':"",
         'outcome_comment':"",
     })
-    this.current['dialogue']=('example_dialogues',name)
+    dejavu.current['dialogue']=('example_dialogues',name)
+    dejavu.set_state("example_dialogue")
 
-
-NARRATOR_NAME="SYSTEM"
-ONGOING_OUTCOME_NAME="ONGOING"
+# ========= prompts =========
 
 def convert_history_plain_text(history):
     text=""
@@ -222,21 +247,38 @@ def perform_check_outcome_query(scenario,history,removed_incidents=[]):
         outcome_type=scenario["outcomes"][outcome_name]["type"]
     return outcome_name, outcome_type, response_text
 
-def example_game_loop(scenario):
-    player_character_name=scenario["player_character_name"]
-    npc_names=list(scenario["characters"].keys());npc_names.remove(player_character_name)
-    history=[]
-    removed_incidents=[]
-    def say(character_name,content):
+# ========= example game loop =========
+
+    
+def print_dialogue(character_name,content,interact=True):
+    if character_name==NARRATOR_NAME:
+        print("\033[90m"+content+"\033[0m")
+    else:
         print("\033[92m"+character_name+"\033[0m"+": "+"\033[94m"+content+"\033[0m")
-        this.say(character_name,content,history=history)
-    for item in scenario["opening_dialogue"]["content"]:
-        if item["type"]=="dialogue":
-            say(item["character"],item["content"])
-        elif item["type"]=="narrate":
-            say(NARRATOR_NAME,item["content"])
+    if interact:
+        input("Press Enter to continue...")
+
+def say(character_name,content):
+    if dejavu.state=="opening_dialogue":
+        print_dialogue(character_name,content,interact=True)
+        write_dialogue(character_name,content,destination=dejavu.scenario_data['opening_dialogue']['content'])
+        write_dialogue(character_name,content,destination=dejavu.scenario_data['history'])
+    elif dejavu.state=="example_dialogue":
+        write_dialogue(character_name,content,destination=dejavu.get_object(dejavu.current['dialogue'])['content'])
+    elif dejavu.state=="playing":
+        write_dialogue(character_name,content,destination=dejavu.scenario_data['history'])
+        print_dialogue(character_name,content,interact=False)
+
+
+
+
+def ai_conversation_loop():
+    npc_names=list(scenario["characters"].keys());npc_names.remove(player_character_name)
+    dejavu.removed_incidents.clear()
+    dejavu.set_state("playing")
+    outcome_type=None
     try:
-        while True:
+        while outcome_type!="outcome":
             player_input=None
             while player_input is None:
                 player_input=input("Your reply: ")
@@ -262,10 +304,9 @@ def example_game_loop(scenario):
                 removed_incidents.append(outcome_name)
             elif outcome_type=="outcome":
                 print("\033[91m"+"Outcome: "+outcome_name+"\033[0m")
-                return outcome_name
+                break
             else: #ongoing
                 pass
-
     except KeyboardInterrupt:
         return ONGOING_OUTCOME_NAME
 
@@ -274,24 +315,24 @@ if __name__=="__main__":
     import json,os
     os.makedirs('./.tmp/',exist_ok=True)
 
-    open("./.tmp/example_data.json","w").write(json.dumps(this.scenario_data,indent=4))
+    open("./.tmp/example_data.json","w").write(json.dumps(dejavu.scenario_data,indent=4))
     print("Scenario data saved to ./tmp/example_data.json")
 
     text=''
-    for dialogues in this.scenario_data['example_dialogues'].values():
+    for dialogues in dejavu.scenario_data['example_dialogues'].values():
         text+=dialogues['name']+"\n"
-        text+=convert_history_plain_text(this.scenario_data['opening_dialogue']['content']+dialogues['content'])
+        text+=convert_history_plain_text(dejavu.scenario_data['opening_dialogue']['content']+dialogues['content'])
         text+="\n\n"
     open("./.tmp/example_dialogue.txt","w").write(text)
     print("Example dialogue saved to ./tmp/example_dialogue.txt")
 
-    history=this.scenario_data['opening_dialogue']['content']
+    history=dejavu.scenario_data['opening_dialogue']['content']
 
-    request=compose_roleplay_request("Captain Galen",this.scenario_data,history)
+    request=compose_roleplay_request("Captain Galen",dejavu.scenario_data,history)
     open("./.tmp/example_roleplay_request.json","w").write(json.dumps(request,indent=4))
     print("Roleplay request saved to ./tmp/example_roleplay_request.json")
 
-    request=compose_check_outcome_request(this.scenario_data,history)
+    request=compose_check_outcome_request(dejavu.scenario_data,history)
     open("./.tmp/example_check_outcome_request.json","w").write(json.dumps(request,indent=4))
     print("Check outcome request saved to ./tmp/example_check_outcome_request.json")
 
@@ -299,4 +340,4 @@ if __name__=="__main__":
     url="https://api.openai.com/v1/chat/completions"
     from chatgpt_api import init_chatgpt_api
     init_chatgpt_api(api_key,url,debug_print_request=False,debug_print_response=False)
-    example_game_loop(this.scenario_data)
+    example_game_loop(dejavu.scenario_data)

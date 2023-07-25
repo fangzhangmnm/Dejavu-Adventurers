@@ -7,11 +7,11 @@ except ImportError:
 scenario("Guard Challenge")
 summary("The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy.")
 
-Guard=character("Captain Galen")
+Guard=AICharacter("Captain Galen")
 personality("greedy, stubborn, unreasonable, prideful, arrogant")
 description("Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.")
 
-Player=character("Adventurer",is_player=True)
+Player=PlayerCharacter("Adventurer")
 
 outcome("Passed","label_passed")
 condition("The guard allows the player to enter the city.")
@@ -61,6 +61,8 @@ Guard("Stop wasting my time. If you keep this up, I'll have you arrested for dis
 Player("We mean no harm, Captain. It seems diplomacy has failed us, but we won't back down from our mission. If you won't let us pass peacefully, we'll have no choice but to force our way through!")
 Guard("*angered* You dare threaten me in my own city? You'll regret that!")
 jump("Fight","Player stirred the guard after he explicitly threatened the player.")
+
+end_scenario()
 
 if __name__ == "__main__":
     api_key=open("C:\\openai.txt").read()
