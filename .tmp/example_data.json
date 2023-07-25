@@ -1,50 +1,46 @@
 {
     "name": "Guard Challenge",
     "summary": "The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy.",
-    "characters": [
-        {
+    "characters": {
+        "Captain Galen": {
             "name": "Captain Galen",
             "description": "Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city.",
-            "personality": "greedy, stubborn, unreasonable, prideful, arrogant",
-            "is_player": false,
-            "payload": null
+            "personality": "greedy, stubborn, unreasonable, prideful, arrogant"
         },
-        {
+        "Adventurer": {
             "name": "Adventurer",
             "description": "",
-            "personality": "",
-            "is_player": true,
-            "payload": null
+            "personality": ""
         }
-    ],
-    "outcomes": [
-        {
+    },
+    "outcomes": {
+        "Passed": {
             "name": "Passed",
             "label": "label_passed",
             "condition": "The guard allows the player to enter the city.",
             "type": "outcome"
         },
-        {
+        "Fight": {
             "name": "Fight",
             "label": "label_fight",
             "condition": "The conflict escalates and the guard attacks the player.",
             "type": "outcome"
         },
-        {
+        "Examine Documents": {
             "name": "Examine Documents",
             "label": "label_examine_documents",
             "condition": "The guard want to examine the player's documents.",
             "type": "incident",
             "once": true
         },
-        {
+        "Take Gold": {
             "name": "Take Gold",
             "label": "label_take_gold",
             "condition": "The player gives the guard gold",
             "type": "incident",
             "once": true
         }
-    ],
+    },
     "opening_dialogue": {
         "name": "Opening Dialogue",
         "description": "",
@@ -60,8 +56,8 @@
             }
         ]
     },
-    "example_dialogues": [
-        {
+    "example_dialogues": {
+        "A bribe": {
             "name": "A bribe",
             "description": "",
             "content": [
@@ -137,7 +133,7 @@
             "outcome_name": "Passed",
             "outcome_comment": "Player have a proper document, a convincing reason and have bribed the guard."
         },
-        {
+        "A failed persuasion which leads to a fight": {
             "name": "A failed persuasion which leads to a fight",
             "description": "",
             "content": [
@@ -208,5 +204,6 @@
             "outcome_name": "Fight",
             "outcome_comment": "Player stirred the guard after he explicitly threatened the player."
         }
-    ]
+    },
+    "player_character_name": "Adventurer"
 }
