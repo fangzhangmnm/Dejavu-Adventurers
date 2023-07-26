@@ -1,3 +1,5 @@
+default guard_diary=[]
+
 label city_gate:
     scenario "Guard Challenge"
     summary "The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy."
@@ -5,20 +7,9 @@ label city_gate:
     $ Guard=AICharacter("Captain Galen") # don't use define here
     personality "greedy, stubborn, unreasonable, prideful, arrogant"
     description "Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city."
+    $ write_diary(guard_diary)
 
     $ Player=PlayerCharacter("Adventurer")
-    
-    outcome "Passed" (label="city_gate.passed")
-    condition "The guard allows the player to enter the city."
-
-    outcome "Fight" (label="city_gate.fight")
-    condition "The conflict escalates and the guard attacks the player."
-
-    incident "Examine Documents" (label="city_gate.examine_documents")
-    condition "The guard want to examine the player's documents."
-
-    incident "Take Item" (label="city_gate.take_item",once=False)
-    condition "The player gives the guard some items."
 
     opening_dialogue "Opening"
 
@@ -72,9 +63,26 @@ label city_gate:
     Guard "*angered* You dare threaten me in my own city? You'll regret that!"
     dejavu_jump "Fight" ("Player stirred the guard after he explicitly threatened the player.")
 
+    outcome "Passed" (label="city_gate.passed")
+    condition "The guard allows the player to enter the city."
+
+    outcome "Fight" (label="city_gate.fight")
+    condition "The conflict escalates and the guard attacks the player."
+
+    incident "Examine Documents" (label="city_gate.examine_documents")
+    condition "The guard want to examine the player's documents."
+
+    incident "Take Item" (label="city_gate.take_item",once=False)
+    condition "The player gives the guard some items."
+
+    end_scenario ""
+
     call dejavu_dialogue_loop from city_gate_label_1
 
-    return 
+    "Guard's Diary"
+    $ narrator('=========='.join(guard_diary))
+
+
 
 label .fight:
     "You end up fighting the guard."
