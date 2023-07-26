@@ -72,7 +72,7 @@ label city_gate:
     Guard "*angered* You dare threaten me in my own city? You'll regret that!"
     dejavu_jump "Fight" ("Player stirred the guard after he explicitly threatened the player.")
 
-    # call ai_dialogue_loop from city_gate_1
+    call dejavu_dialogue_loop from city_gate_label_1
 
     return 
 

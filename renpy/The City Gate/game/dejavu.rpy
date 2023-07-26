@@ -4,9 +4,17 @@ default dejavu_store.scenario_data=None
 default dejavu_store.current={}
 default dejavu_store.state="disabled"
 default dejavu_store.character_objects={}
+default dejavu_narrator=dejavu_character(NARRATOR_NAME)
 
 
 init python hide:
+    import dejavu as api
+    dejavu_store.api=api
+
+    dejavu_store.api.init_chatgpt_api(api_key=open("C:\\openai.txt").read(), proxy="https://api.openai.com/v1/chat/completions")
+
+
+
     def get_object(path):
         p=dejavu_store.scenario_data
         for key in path:
@@ -76,7 +84,7 @@ init python:
                 dejavu_store.scenario_data['npc_names'].append(name)
         return dejavu_store.DejavuCharacter(name,*args,**kwargs)
 
-    dejavu_narrator=dejavu_character(NARRATOR_NAME)
+    
 
     def dejavu_call(outcome_name,comment="",history=None,*args,**kwargs):
         history=history or dejavu_store.get_object(dejavu_store.current['dialogue'])['content']
@@ -161,20 +169,45 @@ init python:
         dejavu_store.set_state("example_dialogue")
 
 label dejavu_dialogue_loop:
-    $ dejavu_store.history=list(dejavu_store.scenario_data['opening_dialogue']['content'])
-    $ dejavu_store.removed_incidents=[]
-    $ dejavu_store.set_state("playing")
-    $ dejavu_store.outcome=ONGOING_OUTCOME_NAME
-    $ dejavu_store.player_character_name=dejavu_store.scenario_data['player_character_name']
-    $ dejavu_store.npc_names=dejavu_store.scenario_data['npc_names']
-    $ renpy.log("Compiled scenario:")
-    $ log_object(dejavu_store.scenario_data)
+    python:
+        dejavu_store.history=list(dejavu_store.scenario_data['opening_dialogue']['content'])
+        dejavu_store.removed_incidents=[]
+        dejavu_store.set_state("playing")
+        dejavu_store.outcome=ONGOING_OUTCOME_NAME
+        dejavu_store.player_character_name=dejavu_store.scenario_data['player_character_name']
+        dejavu_store.npc_names=dejavu_store.scenario_data['npc_names']
+        renpy.log("Compiled scenario:")
+        log_object(dejavu_store.scenario_data)
     while True:
-        $ dejavu_store.user_input = renpy.input("What do you say ?", length=1000)
+        # player input
+        $ dejavu_store.user_input = renpy.input("What do you say ?", length=1000) # need to put in separate statement to make fix_rollback work
         $ renpy.fix_rollback()
-        $ dejavu_store.Player=dejavu_store.character_objects[dejavu_store.player_character_name]
-        dejavu_store.Player "[dejavu_store.user_input]" (interact=False)
+        if dejavu_store.user_input.lower() in ["quit","exit"]:
+            $ dejavu_store.outcome=PLAYER_QUIT_OUTCOME_NAME
+            call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_1
+            return
+        if len(dejavu_store.user_input)>0:
+            $ dejavu_store.Player=dejavu_store.character_objects[dejavu_store.player_character_name]
+            $ dejavu_store.Player(dejavu_store.user_input,interact=False)
+        # npc dialogue
+        $ dejavu_store.iNPC=0
+        while dejavu_store.iNPC<len(dejavu_store.npc_names):
+            python:
+                dejavu_store.NPC=dejavu_store.character_objects[dejavu_store.npc_names[dejavu_store.iNPC]]
+                dejavu_store.npc_name=dejavu_store.npc_names[dejavu_store.iNPC]
+                dejavu_store.iNPC+=1
+                dejavu_store.ai_reply=renpy.roll_forward_info()
+                if dejavu_store.ai_reply is None:
+                    dejavu_store.ai_reply=dejavu_store.api.perform_roleplay_query(dejavu_store.npc_name,dejavu_store.scenario_data,dejavu_store.history)
+                renpy.checkpoint(data=dejavu_store.ai_reply,hard=False)
+            $ dejavu_store.NPC(dejavu_store.ai_reply)
+
+    $ assert False
         
+label dejavu_dialogue_loop_finally_block:
+    dejavu_store.set_state("disabled")
+    return
+
 
 # def ai_conversation_loop(history):
 #     try:

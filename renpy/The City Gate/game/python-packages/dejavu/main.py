@@ -19,8 +19,6 @@ def get_object(path):
 def get_scenario_data():
     return dejavu_store.scenario_data
 
-renpy=object()
-
 
 # ========= DSL =========
 
@@ -28,9 +26,6 @@ NARRATOR_NAME="SYSTEM"
 ONGOING_OUTCOME_NAME="ONGOING"
 PLAYER_QUIT_OUTCOME_NAME="PLAYER_QUIT"
 
-renpy.NARRATOR_NAME=NARRATOR_NAME
-renpy.ONGOING_OUTCOME_NAME=ONGOING_OUTCOME_NAME
-renpy.PLAYER_QUIT_OUTCOME_NAME=PLAYER_QUIT_OUTCOME_NAME
 
 def set_state(state:'Literal["disabled", "opening_dialogue","example_dialogue","playing"]'):
     assert state in ["disabled", "opening_dialogue","example_dialogue","playing"]
@@ -63,7 +58,6 @@ def example_narrator(content,history=None):
         'type':'narrate',
         'content':content,
     })
-renpy.example_narrator=example_narrator
 
 def example_call(outcome_name,comment="",history=None):
     history=history or dejavu_store.get_object(dejavu_store.current['dialogue'])['content']
@@ -72,13 +66,11 @@ def example_call(outcome_name,comment="",history=None):
         'outcome_name':outcome_name,
         'comment':comment,
     })
-renpy.example_call=example_call
 
 def example_jump(outcome_name,comment=""):
     dialogue=dejavu_store.get_object(dejavu_store.current['dialogue'])
     dialogue['outcome_name']=outcome_name
     dialogue['outcome_comment']=comment
-renpy.example_jump=example_jump
 
 def scenario(name):
     dejavu_store.scenario_data={
@@ -91,34 +83,27 @@ def scenario(name):
         'player_character_name':None,
         'npc_names':[],
     }
-renpy.scenario=scenario
 
 def end_scenario():
     dejavu_store.set_state("disabled")
-renpy.end_scenario=end_scenario
-
+    
 def summary(content):
     dejavu_store.scenario_data['summary']=content
-renpy.summary=summary
 
 def AICharacter(name):
     return character(name,is_player=False)
-renpy.AICharacter=AICharacter
 
 def PlayerCharacter(name):
     dejavu_store.scenario_data['player_character_name']=name
     return character(name,is_player=True)
-renpy.PlayerCharacter=PlayerCharacter
 
 def description(content):
     character=dejavu_store.get_object(dejavu_store.current['character'])
     character['description']=content
-renpy.description=description
 
 def personality(content):   
     character=dejavu_store.get_object(dejavu_store.current['character'])
     character['personality']=content
-renpy.personality=personality
 
 def outcome(name,label=None,type='outcome',once=False):
     dejavu_store.scenario_data['outcomes'].setdefault(name,{
@@ -128,16 +113,13 @@ def outcome(name,label=None,type='outcome',once=False):
         'type':type,
     })
     dejavu_store.current['outcome']=('outcomes',name)
-renpy.outcome=outcome
 
 def incident(name,label=None,once=True):
     outcome(name,label,type='incident',once=once)
-renpy.incident=incident
 
 def condition(content):
     outcome=dejavu_store.get_object(dejavu_store.current['outcome'])
     outcome['condition']=content
-renpy.condition=condition
 
 def opening_dialogue(name='Opening'):
     dejavu_store.scenario_data['opening_dialogue']={
@@ -147,7 +129,6 @@ def opening_dialogue(name='Opening'):
     }
     dejavu_store.current['dialogue']=('opening_dialogue',)
     dejavu_store.set_state("opening_dialogue")
-renpy.opening_dialogue=opening_dialogue
 
 def example_dialogue(name):
     dejavu_store.scenario_data['example_dialogues'].setdefault(name,{
@@ -159,7 +140,6 @@ def example_dialogue(name):
     })
     dejavu_store.current['dialogue']=('example_dialogues',name)
     dejavu_store.set_state("example_dialogue")
-renpy.example_dialogue=example_dialogue
 
 # ========= prompts =========
 
