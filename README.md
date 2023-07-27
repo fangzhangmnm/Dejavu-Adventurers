@@ -65,6 +65,13 @@ label .passed:
 # ...
 ```
 
+## How to install
+
+copy renpy/The City Gate/game/dejavu.rpy, renpy/The City Gate/game/dejavu_python_ren.py to the same place of your project folder
+
+view renpy/The City Gate/city_gate.rpy to learn the syntax of writing
+
+
 
 ## Issues and Limitations
 
