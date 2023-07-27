@@ -156,7 +156,7 @@ define config.window_icon = "gui/window_icon.png"
 
 
 
-define gui.text_size = 24
+define gui.text_size = 32
 define config.log="debug_log.txt"
 
 ## Build configuration #########################################################

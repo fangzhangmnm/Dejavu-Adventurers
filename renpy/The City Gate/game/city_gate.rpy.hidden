@@ -4,12 +4,16 @@ label city_gate:
     scenario "Guard Challenge"
     summary "The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy."
     
+    $ Player=PlayerCharacter("Adventurer")
+
     $ Guard=AICharacter("Captain Galen") # don't use define here
     personality "greedy, stubborn, unreasonable, prideful, arrogant"
     description "Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city."
     $ write_diary(guard_diary)
 
-    $ Player=PlayerCharacter("Adventurer")
+    $ Aqua=AICharacter("Aqua")
+    personality "high-spirited, cheerful, and carefree"
+    description "Aqua has an interesting yet troublesome personality. She is high-spirited, cheerful, and carefree, but rarely thinks about the consequences of her actions. While she doesn't force her beliefs onto others, Aqua always acts or speaks on her whims; so, she can behave very inappropriately in many situations."
 
     opening_dialogue "Opening"
 
@@ -69,11 +73,11 @@ label city_gate:
     outcome "Fight" (label="city_gate.fight")
     condition "The conflict escalates and the guard attacks the player."
 
-    incident "Examine Documents" (label="city_gate.examine_documents")
-    condition "The guard want to examine the player's documents."
+    # incident "Examine Documents" (label="city_gate.examine_documents")
+    # condition "The guard want to examine the player's documents."
 
-    incident "Take Item" (label="city_gate.take_item",once=False)
-    condition "The player gives the guard some items."
+    # incident "Take Item" (label="city_gate.take_item",once=False)
+    # condition "The player gives the guard some items."
 
     end_scenario ""
 
@@ -95,17 +99,19 @@ label .passed:
     return
 
 label .examine_documents:
-    history_narrator "The guard examines Adventurer's documents."
+    $ narrator('dejavu_narrator='+str(dejavu_narrator))
+    dejavu_narrator "The guard examines Adventurer's documents."
     $description=renpy.input("(debug only) What is the description of the document?",length=1000)
-    history_narrator "[description]" (slience=True)
+    dejavu_narrator "[description]" (slience=True)
     return
 
 label .take_item:
-    $item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
+    $ item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
+    $ renpy.fix_rollback()
     if item=="no":
-        history_narrator "Adventurer refuses to give the item" # The Guard will get mad at that.
+        dejavu_narrator "Adventurer refuses to give the item" # The Guard will get mad at that.
     else:
-        history_narrator "Adventurer gives [item] to the guard"
+        dejavu_narrator "Adventurer gives [item] to the guard"
         "You lose [item]!"
         # player.item--
     return
