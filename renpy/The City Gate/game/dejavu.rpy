@@ -216,6 +216,7 @@ init python:
             'name':name,
             'description':"",
             'personality':"",
+            'diary_list':[],
         })
         dejavu_store.current['character']=('characters',name)
         if is_player:
@@ -241,6 +242,10 @@ init python:
     def personality(content,*args,**kwargs):   
         character=dejavu_store.get_object(dejavu_store.current['character'])
         character['personality']=content
+
+    def read_diary(diary_list:list):
+        character=dejavu_store.get_object(dejavu_store.current['character'])
+        character['diary_list'].extend(diary_list)
 
     def write_diary(diary_list_reference:list):
         character=dejavu_store.get_object(dejavu_store.current['character'])
