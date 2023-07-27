@@ -65,7 +65,30 @@ init python hide:
                 if not slience:(self.renpy_character or narrator)(what,*args,**kwargs)
     dejavu_store.DejavuCharacter=DejavuCharacter
 
+    class RollBackHistory(NoRollback):
+        def __init__(self):
+            self.history={}
+        def get(self,key,default=None):
+            if key in self.history:
+                return self.history[key]
+            else:
+                return default
+        def set(self,key,value):
+            self.history[key]=value
+    class RollBack:
+        def __init__(self):
+            self.history=RollBackHistory()
+            self.counter=-1
+        def get(self,default=None):
+            self.counter+=1
+            return self.history.get(self.counter,default=default)
+        def set(self,value):
+            self.history.set(self.counter,value)
+    dejavu_store.RollBack=RollBack
 
+
+default dejavu_store.rollback=dejavu_store.RollBack()
+        
 label dejavu_dialogue_loop:
     python:
         assert dejavu_store.state=='disabled', "You must call end_scenario() before calling dejavu_dialogue_loop."
@@ -80,55 +103,51 @@ label dejavu_dialogue_loop:
             log_object(dejavu_store.scenario_data)
     while True:
         # player input
-        $ dejavu_store.user_input = renpy.input("What do you say ?", length=1000) or "" # need to put in separate statement to make fix_rollback work
-        $ renpy.fix_rollback()
+        python:
+            dejavu_store.user_input=dejavu_store.rollback.get()
+            if dejavu_store.user_input is None:
+                renpy.suspend_rollback(True)
+                dejavu_store.user_input = renpy.input("What do you say ?", length=1000) or "" # need to put in separate statement to make fix_rollback work
+                dejavu_store.rollback.set(dejavu_store.user_input)
+                renpy.suspend_rollback(False)
         if dejavu_store.user_input.lower() in ["quit","exit"]:
             $ dejavu_store.outcome=PLAYER_QUIT_OUTCOME_NAME
             call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_1
             return
         if len(dejavu_store.user_input)>0:
             $ dejavu_store.Player=dejavu_store.character_objects[dejavu_store.player_character_name]
-            $ dejavu_store.Player(dejavu_store.user_input,interact=False)
+            $ dejavu_store.Player(dejavu_store.user_input)
+
         # npc dialogue
         $ dejavu_store.iNPC=0
         while dejavu_store.iNPC<len(dejavu_store.npc_names):
             python:
                 dejavu_store.NPC=dejavu_store.character_objects[dejavu_store.npc_names[dejavu_store.iNPC]]
                 dejavu_store.npc_name=dejavu_store.npc_names[dejavu_store.iNPC]
-                dejavu_store.cached_reply=renpy.roll_forward_info() or {}
-                log_text("cached reply:")
-                log_object(dejavu_store.cached_reply)
-                dejavu_store.ai_reply=dejavu_store.cached_reply.get('ai_reply',None)
+                dejavu_store.ai_reply=dejavu_store.rollback.get()
                 if dejavu_store.ai_reply is None:
                     dejavu_store.ai_reply=dejavu_store.perform_roleplay_query(dejavu_store.npc_name,dejavu_store.scenario_data, dejavu_store.history)
-                dejavu_store.cached_reply['ai_reply']=dejavu_store.ai_reply
-                renpy.checkpoint(data=dejavu_store.cached_reply,hard=False)
-                renpy.fix_rollback()
+                    dejavu_store.rollback.set(dejavu_store.ai_reply)
                 dejavu_store.iNPC+=1
             $ dejavu_store.NPC(dejavu_store.ai_reply)
+
         # check outcome
+        python:
+            dejavu_store.outcome_tuple=dejavu_store.rollback.get()
+            if dejavu_store.outcome_tuple is None:
+                dejavu_store.outcome_tuple=dejavu_store.perform_check_outcome_query(dejavu_store.scenario_data,dejavu_store.history,removed_incidents=dejavu_store.removed_incidents)
+                dejavu_store.rollback.set(dejavu_store.outcome_tuple)
+            dejavu_store.outcome_name,dejavu_store.outcome_type,dejavu_store.outcome_comment=dejavu_store.outcome_tuple
         
-        # python:
-        #     dejavu_store.cached_reply=renpy.roll_forward_info() or {}
-        #     log_text("cached reply:")
-        #     log_object(dejavu_store.cached_reply)
-        #     dejavu_store.outcome_tuple=dejavu_store.cached_reply.get('outcome_tuple',None)
-        #     if dejavu_store.outcome_tuple is None:
-        #         dejavu_store.outcome_tuple=dejavu_store.perform_check_outcome_query(dejavu_store.scenario_data,dejavu_store.history,removed_incidents=dejavu_store.removed_incidents)
-        #     dejavu_store.cached_reply['outcome_tuple']=dejavu_store.outcome_tuple
-        #     renpy.checkpoint(data=dejavu_store.cached_reply,hard=False)
-        #     renpy.fix_rollback()
-        #     dejavu_store.outcome_name,dejavu_store.outcome_type,dejavu_store.outcome_comment=dejavu_store.outcome_tuple
-        
-        # if dejavu_store.outcome_type=="incident":
-        #     $ dejavu_store.removed_incidents.append(dejavu_store.outcome_name)
-        #     call expression dejavu_store.get_outcome_label(dejavu_store.outcome_name)
-        # elif dejavu_store.outcome_type=="outcome":
-        #     call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_2
-        #     jump expression dejavu_store.get_outcome_label(dejavu_store.outcome_name)
+        if dejavu_store.outcome_type=="incident":
+            $ dejavu_store.removed_incidents.append(dejavu_store.outcome_name)
+            call expression dejavu_store.get_outcome_label(dejavu_store.outcome_name)
+        elif dejavu_store.outcome_type=="outcome":
+            call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_2
+            jump expression dejavu_store.get_outcome_label(dejavu_store.outcome_name)
 
     $ assert False
-        
+    
 label dejavu_dialogue_loop_finally_block:
     $ dejavu_store.set_state("disabled")
 
@@ -444,9 +463,13 @@ init python hide: # chatgpt api
         return response[-1]["content"]
 
     def perform_check_outcome_query(scenario,history,removed_incidents=[]):
+        if len(scenario["outcomes"])-len(removed_incidents)<=0:
+            return ONGOING_OUTCOME_NAME, "ongoing", "No outcome defined."
         request=compose_check_outcome_request(scenario,history,remove_incidents=removed_incidents)
         response=completion_with_log("check_outcome",request,temperature=0)
         response_text=response[-1]["content"]
+        if dejavu_store.log_level>=1:
+            log_text(response_text)
         target_labels=list(scenario['outcomes'].keys())+[ONGOING_OUTCOME_NAME]
         outcome_name=purify_label(response_text,target_labels,default=ONGOING_OUTCOME_NAME)
         if outcome_name==ONGOING_OUTCOME_NAME:

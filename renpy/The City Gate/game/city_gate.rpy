@@ -1,6 +1,9 @@
 default guard_diary=[]
 
 label city_gate:
+    scene city gate
+    with fade
+
     scenario "Guard Challenge"
     summary "The player attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The player have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy."
     
@@ -11,14 +14,12 @@ label city_gate:
     description "Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city."
     $ write_diary(guard_diary)
 
-    $ Aqua=AICharacter("Aqua")
-    personality "high-spirited, cheerful, and carefree"
-    description "Aqua has an interesting yet troublesome personality. She is high-spirited, cheerful, and carefree, but rarely thinks about the consequences of her actions. While she doesn't force her beliefs onto others, Aqua always acts or speaks on her whims; so, she can behave very inappropriately in many situations."
+    # $ Aqua=AICharacter("Aqua")
+    # personality "high-spirited, cheerful, and carefree"
+    # description "Aqua has an interesting yet troublesome personality. She is high-spirited, cheerful, and carefree, but rarely thinks about the consequences of her actions. While she doesn't force her beliefs onto others, Aqua always acts or speaks on her whims; so, she can behave very inappropriately in many situations."
 
     opening_dialogue "Opening"
 
-    scene city gate
-    with fade
 
     dejavu_narrator "The player approaches the city gate, the gate is closed shut. The guard is standing in front of the gate."
 
@@ -70,14 +71,17 @@ label city_gate:
     outcome "Passed" (label="city_gate.passed")
     condition "The guard allows the player to enter the city."
 
-    outcome "Fight" (label="city_gate.fight")
+    outcome "Irritated" (label="city_gate.fight") # to bypass the safety check of ChatGPT, we need to hard coding the guard's attack behavior
+    condition "The conflict escalates and the guard was totally irritated by the player."
+
+    outcome "Fight" (label="city_gate.fight") # if player actively decide to fight the guard, ChatGPT is still able to generate the guard's attack behavior
     condition "The conflict escalates and the guard attacks the player."
 
-    # incident "Examine Documents" (label="city_gate.examine_documents")
-    # condition "The guard want to examine the player's documents."
+    incident "Examine Documents" (label="city_gate.examine_documents")
+    condition "The guard want to examine the player's documents."
 
-    # incident "Take Item" (label="city_gate.take_item",once=False)
-    # condition "The player gives the guard some items."
+    incident "Take Item" (label="city_gate.take_item",once=False)
+    condition "The player gives the guard some items."
 
     end_scenario ""
 
@@ -86,6 +90,7 @@ label city_gate:
     "Guard's Diary"
     $ narrator('=========='.join(guard_diary))
 
+    return
 
 
 label .fight:
@@ -99,7 +104,6 @@ label .passed:
     return
 
 label .examine_documents:
-    $ narrator('dejavu_narrator='+str(dejavu_narrator))
     dejavu_narrator "The guard examines Adventurer's documents."
     $description=renpy.input("(debug only) What is the description of the document?",length=1000)
     dejavu_narrator "[description]" (slience=True)

@@ -1,4 +1,4 @@
-﻿Start Testing
+﻿--- Thu Jul 27 00:44:00 2023
 
 The player approaches the city gate, the gate is closed shut. The guard is
 standing in front of the gate.
@@ -7,518 +7,61 @@ Captain Galen
 Halt! State your business and provide your documentation.
 
 Adventurer
-hey
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Adventurer
-hey
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
---- Wed Jul 26 19:07:06 2023
-
-Start Testing
-
-The player approaches the city gate, the gate is closed shut. The guard is
-standing in front of the gate.
-
-Captain Galen
-Halt! State your business and provide your documentation.
-
---- Wed Jul 26 19:08:21 2023
-
-Start Testing
-
-The player approaches the city gate, the gate is closed shut. The guard is
-standing in front of the gate.
-
-Captain Galen
-Halt! State your business and provide your documentation.
-
-Adventurer
-hey
-
-cached reply:
-
-{}
+you bastard
 
 performing perform_roleplay_query query...
 
 perform_roleplay_query query responsed
 
 Captain Galen
-Captain Galen: State your business and provide your documentation, or you
-shall not pass.
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Aqua
-Aqua: Oh, hey there, Mr. Guard! We're just a group of adventurers looking for
-some excitement and fun in your city. We don't really have any documentation,
-but I promise we're harmless! Can't you just let us in? Pretty please?
-
-cached reply:
-
-{}
+Captain Galen: Watch your tongue, adventurer. Show some respect or you'll find
+yourself barred from entering this city forever.
 
 performing check_outcome query...
 
 check_outcome query responsed
 
-cached reply:
-
-{
-    "ai_reply": "Aqua: Oh, hey there, Mr. Guard! We're just a group of
-adventurers looking for some excitement and fun in your city. We don't really
-have any documentation, but I promise we're harmless! Can't you just let us
-in? Pretty please?"
-}
+The conversation is ongoing, ONGOING
 
 Adventurer
-hey
+you idiot
 
-cached reply:
+performing perform_roleplay_query query...
 
-{
-    "ai_reply": "Captain Galen: State your business and provide your
-documentation, or you shall not pass."
-}
+perform_roleplay_query query responsed
 
 Captain Galen
-Captain Galen: State your business and provide your documentation, or you
-shall not pass.
-
-cached reply:
-
-{
-    "ai_reply": "Aqua: Oh, hey there, Mr. Guard! We're just a group of
-adventurers looking for some excitement and fun in your city. We don't really
-have any documentation, but I promise we're harmless! Can't you just let us
-in? Pretty please?"
-}
-
-Aqua
-Aqua: Oh, hey there, Mr. Guard! We're just a group of adventurers looking for
-some excitement and fun in your city. We don't really have any documentation,
-but I promise we're harmless! Can't you just let us in? Pretty please?
-
-cached reply:
-
-{}
+Captain Galen: How dare you insult me! You shall not pass, and I will make
+sure to report your insolence to the authorities!
 
 performing check_outcome query...
 
 check_outcome query responsed
 
-Adventurer
-here
+The conflict escalates and the guard was totally irritated by the player.,
+Irritated
 
-cached reply:
+performing summary query...
 
-{}
+summary query responsed
 
-performing perform_roleplay_query query...
+You end up fighting the guard.
 
-perform_roleplay_query query responsed
+Bad Ending
 
-cached reply:
+Guard's Diary
 
-{
-    "ai_reply": "Aqua: Oh, hey there, Mr. Guard! We're just a group of
-adventurers looking for some excitement and fun in your city. We don't really
-have any documentation, but I promise we're harmless! Can't you just let us
-in? Pretty please?"
-}
+I stood at the city gate, my eyes fixed on the approaching adventurer. As they
+neared, I barked at them to halt, demanding to know their purpose and see
+their documentation. The insolent fool had the audacity to insult me, calling
+me a bastard. I warned them to watch their tongue and show respect,
+threatening to ban them from the city. But they continued their insults,
+calling me an idiot. My pride was wounded, and I vowed to ensure they would
+never enter the city, reporting their insolence to the authorities.
 
-Aqua
-Aqua: Oh, hey there, Mr. Guard! We're just a group of adventurers looking for
-some excitement and fun in your city. We don't really have any documentation,
-but I promise we're harmless! Can't you just let us in? Pretty please?
+You end up fighting the guard.
 
-cached reply:
+Bad Ending
 
-{
-    "outcome_tuple": [
-        "ONGOING",
-        "ongoing",
-        "The conversation is ongoing, ONGOING"
-    ]
-}
-
---- Wed Jul 26 20:19:30 2023
-
-Start Testing
-
-The player approaches the city gate, the gate is closed shut. The guard is
-standing in front of the gate.
-
-Captain Galen
-Halt! State your business and provide your documentation.
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Captain Galen
-Player: We seek entry into the city, Captain Galen. We have urgent matters to
-attend to.  Captain Galen: Urgent matters, you say? Well, that's not enough to
-sway me. You'll need to provide proper documentation and pay the required
-taxes like everyone else. No exceptions.
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Aqua
-Aqua: Hey there, Captain Galen! What's with all these rules and taxes? Can't
-we just have a little fun and enter the city? Come on, lighten up a bit! Let
-us in, pretty please?
-
-cached reply:
-
-{}
-
-performing check_outcome query...
-
-check_outcome query responsed
-
-cached reply:
-
-{
-    "ai_reply": "Aqua: Hey there, Captain Galen! What's with all these rules
-and taxes? Can't we just have a little fun and enter the city? Come on,
-lighten up a bit! Let us in, pretty please?"
-}
-
-Aqua
-Aqua: Hey there, Captain Galen! What's with all these rules and taxes? Can't
-we just have a little fun and enter the city? Come on, lighten up a bit! Let
-us in, pretty please?
-
-cached reply:
-
-{}
-
-performing check_outcome query...
-
-check_outcome query responsed
-
---- Wed Jul 26 20:26:17 2023
-
-Start Testing
-
-The player approaches the city gate, the gate is closed shut. The guard is
-standing in front of the gate.
-
-Captain Galen
-Halt! State your business and provide your documentation.
-
-Adventurer
-Here it is
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Captain Galen
-Give it to me. *inspects the document* This document is incomplete and lacks
-the proper seal. Entry denied.
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Aqua
-Aqua: Oh, come on, Captain! Can't you just let us in? We promise we won't
-cause any trouble! Plus, we have some really cool stories to share with the
-people of Eldoria!
-
-Adventurer
-Hey
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Captain Galen
-I am not interested in your stories. The rules are clear, and I will not make
-exceptions.
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Aqua
-Aqua: Well, if you're not interested in our stories, then you're missing out
-on some amazing adventures! But I guess some people just don't appreciate the
-joy of a good tale. Guess we'll have to find another way in. Come on,
-everyone, let's go find a secret entrance or something!
-
-cached reply:
-
-{
-    "ai_reply": "Aqua: Well, if you're not interested in our stories, then
-you're missing out on some amazing adventures! But I guess some people just
-don't appreciate the joy of a good tale. Guess we'll have to find another way
-in. Come on, everyone, let's go find a secret entrance or something!"
-}
-
-Adventurer
-Hey
-
-cached reply:
-
-{
-    "ai_reply": "I am not interested in your stories. The rules are clear, and
-I will not make exceptions."
-}
-
-cached reply:
-
-{
-    "ai_reply": "Aqua: Oh, come on, Captain! Can't you just let us in? We
-promise we won't cause any trouble! Plus, we have some really cool stories to
-share with the people of Eldoria!"
-}
-
-Adventurer
-Here it is
-
-cached reply:
-
-{
-    "ai_reply": "Give it to me. *inspects the document* This document is
-incomplete and lacks the proper seal. Entry denied."
-}
-
-Captain Galen
-Give it to me. *inspects the document* This document is incomplete and lacks
-the proper seal. Entry denied.
-
-cached reply:
-
-{}
-
-performing perform_roleplay_query query...
-
-perform_roleplay_query query responsed
-
-Aqua
-Aqua: Oh, come on, Captain! Can't you just let us in? We promise we won't
-cause any trouble. Pretty please? *flashes a bright smile*
-
---- Wed Jul 26 20:31:18 2023
-
-Player
-hey
-
-NPC1
-6
-
-NPC2
-1
-
-Player
-hoolw
-
-NPC1
-10
-
-NPC2
-7
-
---- Wed Jul 26 20:32:03 2023
-
-Player
-hey
-
-NPC1
-9
-
-NPC2
-5
-
-Player
-hoola
-
-NPC1
-4
-
-Player
-hoola
-
-Player
-hoola
-
-NPC1
-4
-
-Player
-hoola
-
---- Wed Jul 26 20:32:43 2023
-
-Player
-hey
-
-NPC1
-10
-
-NPC2
-2
-
-Player
-hoo
-
-NPC1
-9
-
-NPC2
-8
-
-Player
-hoo
-
---- Wed Jul 26 20:33:38 2023
-
-Player
-hey
-
-NPC1
-10
-
-NPC1
-10
-
-Player
-True
-
---- Wed Jul 26 20:34:11 2023
-
-Player
-hey
-
-NPC1
-7
-
-NPC2
-4
-
-Player
-True
-
---- Wed Jul 26 20:35:56 2023
-
-Player
-apple
-
-Player
-True
-
---- Wed Jul 26 20:38:50 2023
-
-Player
-123
-
-NPC1
-6
-
-Player
-234
-
-Player
-True
-
-NPC1
-6
-
-Player
-True
-
-Player
-True
-
-NPC1
-6
-
---- Wed Jul 26 20:39:53 2023
-
-Player
-hey
-
-NPC1
-10
-
-Player
-True
-
-Player
-True
-
-NPC1
-10
-
-Player
-12
-
-NPC1
-5
-
-Player
-13
-
-Player
-12
-
-Player
-True
-
-Player
-True
-
-NPC1
-10
+--- Thu Jul 27 00:45:08 2023
 

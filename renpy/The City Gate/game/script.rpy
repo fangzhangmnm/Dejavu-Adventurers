@@ -1,28 +1,20 @@
 ﻿define Player= Character("Player", color="#c8ffc8", what_prefix="")
-define NPC1 = Character("NPC1", color="#ffc8c8", what_prefix="")
-define NPC2 = Character("NPC2", color="#ffc8c8", what_prefix="")
+define NPC = Character("NPC", color="#ffc8c8", what_prefix="")
+
+
 label start:
-    while True:
-        $ player_input= renpy.input("What do you want to do?")
-        $ renpy.fix_rollback()
-        Player "[player_input]" (interact=False)
 
-        $ response=renpy.roll_forward_info()
-        if response is None:
-            $ response=str(renpy.random.randint(1, 10))
-        $ renpy.checkpoint(response,hard=False)
-        $ renpy.fix_rollback()
-        NPC1 "[response]"
-        
-
-        
+    python:
+        import time
+        def get_ai_response(query):
+            return "This is a dummy response. {}".format(int(time.time()*3))
 
 
 
-    "Start Testing"
+
+
+
     call city_gate
-    "Successfully returned!"
-    $ log_object(dejavu_store.scenario_data)
     return
 
 
@@ -30,3 +22,17 @@ label start:
 
 
     
+label example_bad_rollback_loop:
+    while True:
+        $ user_input= renpy.input("What do you want to say? ")
+        $ renpy.fix_rollback()
+
+        $ iNPC=0
+        while iNPC<2:
+            python:
+                ai_response=renpy.roll_forward_info()
+                if ai_response is None:
+                    ai_response=get_ai_response(user_input)
+                renpy.checkpoint(ai_response)
+            $ iNPC+=1
+            $ NPC(ai_response)
