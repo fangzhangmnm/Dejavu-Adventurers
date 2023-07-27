@@ -25,11 +25,11 @@ In machine learning jargon, the dejavu method is an example of "Few Shot Learnin
 
 # The following dialogue examples feed the AI with different possibilities of storylines, to make it understand the desired plot and writing style
 
-dejavu.example_dialogue "A bribe"
+dejavu_example_dialogue "A bribe"
 Player "No worries, Captain. Here is the document"
 Guard "Give me the document. *impatiently* I don't have all day."
-dejavu.call "Examine Documents" ("Player claims to have a proper document.") # Here AI will learn to ask the game engine to provide information about the document
-dejavu.narrator "Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities."
+dejavu_call "Examine Documents" ("Player claims to have a proper document.") # Here AI will learn to ask the game engine to provide information about the document
+dejavu_narrator "Player presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities."
 Guard "*examines the documents* Hmm... *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied."
 Player "Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria."
 Guard "*skeptical* Undead, you say? That's not an excuse to bypass the city's regulations."
@@ -39,19 +39,20 @@ Player "*sincerely* Captain Galen, please. We risked our lives to bring this inf
 Guard "*stern* Rules are rules. If you can't abide by them, then leave."
 Player "Captain, we understand the importance of your duty. Would a little compensation help you look the other way, just this once?"
 Guard "*raised eyebrow* Hugh? What are you implying?"
-dejavu.call "Take Item" ("player agrees to bribe the guard.")
-dejavu.narrator "Player offers a pouch of gold to Captain Galen."
+dejavu_call "Take Item" ("player agrees to bribe the guard.")
+dejavu_narrator "Player offers a pouch of gold to Captain Galen."
 Guard "*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out."
-dejavu.jump "Passed" ("Player have a proper document, a convincing reason and have bribed the guard.") # AI will determine which outcome the player achieved!
+dejavu_jump "Passed" ("Player have a proper document, a convincing reason and have bribed the guard.") # AI will determine which outcome the player achieved!
 
 # ...
 
 label .take_item:
-    $item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
+    $ item=renpy.input("(debug only) What item do you want to give? \"no\" for not giving anything",length=1000) # We need to check player's inventory in actual game!
+    $ renpy.fix_rollback()
     if item=="no":
-        history_narrator "Adventurer refuses to give the item" # The Guard will get mad at that.
+        dejavu_narrator "Adventurer refuses to give the item" # The Guard will get mad at that.
     else:
-        history_narrator "Adventurer gives [item] to the guard"
+        dejavu_narrator "Adventurer gives [item] to the guard"
         "You lose [item]!" 
         # player.item--
     return
@@ -59,7 +60,7 @@ label .take_item:
 label .passed:
     "You successfully enter the city."
     "Good Ending"
-    return
+    jump next_scene
 
 # ...
 ```
@@ -68,3 +69,12 @@ label .passed:
 ## Issues and Limitations
 
 ChatGPT will stuck for minutes when encountering sensitive content. Think about Isaac Asimov's "Three Laws of Robotics"!
+
+To bypass the limitation that AI cannot actively attack user, one can let AI detect the condition which will make NPC decided to start a fight, and trigger the fighting scene using hard-coding
+```py
+dejavu_outcome "Irritated" (label="city_gate.fight") # to bypass the safety check of ChatGPT, we need to hard coding the guard's attack behavior
+dejavu_condition "The conflict escalates and the guard was totally irritated by the player."
+
+dejavu_outcome "Fight" (label="city_gate.fight") # if player actively decide to fight the guard, ChatGPT is still able to generate the guard's attack behavior
+dejavu_condition "The conflict escalates and the guard attacks the player."
+```
