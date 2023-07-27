@@ -141,9 +141,9 @@ label dejavu_dialogue_loop:
         
         if dejavu_store.outcome_type=="incident":
             $ dejavu_store.removed_incidents.append(dejavu_store.outcome_name)
-            call expression dejavu_store.get_outcome_label(dejavu_store.outcome_name)
+            call expression dejavu_store.get_outcome_label(dejavu_store.outcome_name) from dejavu_dialogue_loop_label_2
         elif dejavu_store.outcome_type=="outcome":
-            call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_2
+            call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_3
             jump expression dejavu_store.get_outcome_label(dejavu_store.outcome_name)
 
     $ assert False

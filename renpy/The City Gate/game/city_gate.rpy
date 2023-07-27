@@ -88,7 +88,31 @@ label city_gate:
     call dejavu_dialogue_loop from city_gate_label_1
 
     "Guard's Diary"
-    $ narrator('=========='.join(guard_diary))
+    $ narrator(guard_diary[0])
+
+    jump second_day
+
+label second_day:
+    scene city gate
+    with fade
+
+    scenario "Guard Challenge - Second Day"
+    summary "After the player entered the city, they are interviewe by the duke of Eldoria. The duke is impressed by the player's knowledge and experience, and he decides to hire the player as a royal advisor. On the second day, the player appeared at the city gate again."
+
+    $ Player=PlayerCharacter("Adventurer")
+
+    $ Guard=AICharacter("Captain Galen") # don't use define here
+    personality "greedy, stubborn, unreasonable, prideful, arrogant"
+    description "Captain Galen is the guard for the city gate. He is supposed to examine the travelers and collect taxes from them. But he is very greedy, and he always tries to find excuses to collect more taxes. He is also very stubborn and unreasonable. He is very proud of his position, and he thinks he is the most powerful person in the city."
+    $ read_diary(guard_diary)
+    $ write_diary(guard_diary)
+
+    end_scenario ""
+
+    call dejavu_dialogue_loop from second_day_label_1
+
+    "Guard's Diary Day 2"
+    $ narrator(guard_diary[1])
 
     return
 
