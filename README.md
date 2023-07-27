@@ -1,4 +1,4 @@
-# Dejavu: Chat with AI in your Ren'Py adventure game with prescripted script.
+# Dejavu: ChatGPT (or other Large Language Model LLM) in your Ren'Py visual novel with prescripted script.
 
 *Ren'Py-like natural language with full rollback/SaveLoad support!*
 
