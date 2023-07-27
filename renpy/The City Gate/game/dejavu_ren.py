@@ -22,6 +22,11 @@ def log_object(obj):
     import json
     print("\033[90m"+json.dumps(obj,indent=4)+"\033[0m")
 
+#################################################################################
+#################################################################################
+#################################################################################
+
+
 """renpy
 init offset=-100
 
@@ -359,7 +364,7 @@ def log_object(obj):
         renpy.log(line)
     renpy.log("")
 
-def dejavu_call(outcome_name,comment="",history=None,*args,**kwargs):
+def call_incident(outcome_name,comment="",history=None,*args,**kwargs):
     history=history or dejavu_store.get_object(dejavu_store.current['dialogue'])['content']
     history.append({
         'type':'call',
@@ -367,13 +372,12 @@ def dejavu_call(outcome_name,comment="",history=None,*args,**kwargs):
         'comment':comment,
     })
 
-def dejavu_jump(outcome_name,comment="",*args,**kwargs):
+def jump_outcome(outcome_name,comment="",*args,**kwargs):
     dialogue=dejavu_store.get_object(dejavu_store.current['dialogue'])
     dialogue['outcome_name']=outcome_name
     dialogue['outcome_comment']=comment
 
-def dejavu_scenario(name,*args,**kwargs):
-    dejavu_store.on_new_scenario()
+def scenario(name,*args,**kwargs):
     dejavu_store.scenario_data={
         'name':name,
         'summary':"",
@@ -390,14 +394,14 @@ def dejavu_scenario(name,*args,**kwargs):
     }
     inject_DSL()
 
-def dejavu_end_scenario(what="",*args,**kwargs):
+def end_scenario(what="",*args,**kwargs):
     dejavu_store.set_state("disabled")
 
-def dejavu_summary(content,*args,**kwargs):
+def summary(content,*args,**kwargs):
     dejavu_store.scenario_data['summary']=content
 
 
-def dejavu_character(name,is_player=False,*args,**kwargs):
+def character(name,is_player=False,*args,**kwargs):
     assert name!=NARRATOR_NAME
     dejavu_store.scenario_data['characters'].setdefault(name,{
         'name':name,
@@ -414,31 +418,31 @@ def dejavu_character(name,is_player=False,*args,**kwargs):
     return dejavu_store.character_objects[name]
 
 def AICharacter(name,*args,**kwargs):
-    return dejavu_character(name,is_player=False,*args,**kwargs)
+    return character(name,is_player=False,*args,**kwargs)
 
 def PlayerCharacter(name,*args,**kwargs):
     dejavu_store.scenario_data['player_character_name']=name
-    return dejavu_character(name,is_player=True,*args,**kwargs)
+    return character(name,is_player=True,*args,**kwargs)
 
 dejavu_narrator=dejavu_store.DejavuCharacter(NARRATOR_NAME)
 
-def dejavu_description(content,*args,**kwargs):
+def description(content,*args,**kwargs):
     character=dejavu_store.get_object(dejavu_store.current['character'])
     character['description']=content
 
-def dejavu_personality(content,*args,**kwargs):   
+def personality(content,*args,**kwargs):   
     character=dejavu_store.get_object(dejavu_store.current['character'])
     character['personality']=content
 
-def dejavu_read_diary(diary_list:list):
+def read_diary(diary_list:list):
     character=dejavu_store.get_object(dejavu_store.current['character'])
     character['diary_list'].extend(diary_list)
 
-def dejavu_write_diary(diary_list_reference:list):
+def write_diary(diary_list_reference:list):
     character=dejavu_store.get_object(dejavu_store.current['character'])
     dejavu_store.diary_references[character['name']]=diary_list_reference
 
-def dejavu_outcome(name,label=None,type='outcome',once=False,*args,**kwargs):
+def outcome(name,label=None,type='outcome',once=False,*args,**kwargs):
     dejavu_store.scenario_data['outcomes'].setdefault(name,{
         'name':name,
         'label':label or name,
@@ -447,19 +451,19 @@ def dejavu_outcome(name,label=None,type='outcome',once=False,*args,**kwargs):
     })
     dejavu_store.current['outcome']=('outcomes',name)
 
-def dejavu_incident(name,label=None,once=True,*args,**kwargs):
-    dejavu_outcome(name,label,type='incident',once=once)
+def incident(name,label=None,once=True,*args,**kwargs):
+    outcome(name,label,type='incident',once=once)
 
-def dejavu_condition(content,*args,**kwargs):
+def condition(content,*args,**kwargs):
     outcome=dejavu_store.get_object(dejavu_store.current['outcome'])
     outcome['condition']=content
 
-def dejavu_opening_dialogue(name='Opening',*args,**kwargs):
+def opening_dialogue(name='Opening',*args,**kwargs):
     dejavu_store.scenario_data['opening_dialogue']['name']=name
     dejavu_store.current['dialogue']=('opening_dialogue',)
     dejavu_store.set_state("opening_dialogue")
 
-def dejavu_example_dialogue(name,*args,**kwargs):
+def example_dialogue(name,*args,**kwargs):
     dejavu_store.scenario_data['example_dialogues'].setdefault(name,{
         'name':name,
         'description':"",
@@ -471,29 +475,28 @@ def dejavu_example_dialogue(name,*args,**kwargs):
     dejavu_store.set_state("example_dialogue")
 
 def inject_DSL():
-    store.dejavu_call=dejavu_call
-    store.dejavu_jump=dejavu_jump
-    store.dejavu_scenario=dejavu_scenario
-    store.dejavu_end_scenario=dejavu_end_scenario
-    store.dejavu_summary=dejavu_summary
-    store.dejavu_character=dejavu_character
+    store.call_incident=call_incident
+    store.jump_outcome=jump_outcome
+    store.scenario=scenario
+    store.end_scenario=end_scenario
+    store.summary=summary
+    store.character=character
     store.AICharacter=AICharacter
     store.PlayerCharacter=PlayerCharacter
-    store.dejavu_narrator=dejavu_narrator
-    store.dejavu_description=dejavu_description
-    store.dejavu_personality=dejavu_personality
-    store.dejavu_read_diary=dejavu_read_diary
-    store.dejavu_write_diary=dejavu_write_diary
-    store.dejavu_outcome=dejavu_outcome
-    store.dejavu_incident=dejavu_incident
-    store.dejavu_condition=dejavu_condition
-    store.dejavu_opening_dialogue=dejavu_opening_dialogue
-    store.dejavu_example_dialogue=dejavu_example_dialogue
+    store.narrator=dejavu_narrator
+    store.description=description
+    store.personality=personality
+    store.read_diary=read_diary
+    store.write_diary=write_diary
+    store.outcome=outcome
+    store.incident=incident
+    store.condition=condition
+    store.opening_dialogue=opening_dialogue
+    store.example_dialogue=example_dialogue
 
     store.log_text=log_text
     store.log_object=log_object
-    
-store.dejavu_scenario=dejavu_scenario
+inject_DSL()
 
 """renpy
 default dejavu_store.rollback=dejavu_store.RollBack() # initialize the rollback system at the new game
