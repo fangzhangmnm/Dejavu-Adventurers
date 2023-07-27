@@ -205,8 +205,12 @@ label dejavu_dialogue_loop:
 label dejavu_dialogue_loop_finally_block:
     $ dejavu_store.set_state("disabled")
 
-    python:
+    python: # summary the dialogue for each character into their diary
         for name,diary_references in dejavu_store.diary_references.items():
-            diary_references.append(dejavu_store.perform_summary_query(name,dejavu_store.scenario_data,dejavu_store.history))
+            dejavu_store.summary_text=dejavu_store.rollback.get()
+            if dejavu_store.summary_text is None:
+                dejavu_store.summary_text=dejavu_store.perform_summary_query(name,dejavu_store.scenario_data,dejavu_store.history)
+                dejavu_store.rollback.set(dejavu_store.summary_text)
+            diary_references.append(dejavu_store.summary_text)
 
     return
