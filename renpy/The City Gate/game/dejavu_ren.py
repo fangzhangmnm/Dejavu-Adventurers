@@ -1,20 +1,29 @@
 renpy=object()
 
-character_objects:"dict[Character]"={}
-scenario_object:"Scenario"=None
-current=object()
 """renpy
 default dejavu.character_objects={}
 default dejavu.scenario_object=None
-default dejavu.current=object()
+default dejavu.current=Current()
 
 
 init python in dejavu:
 """
 
+character_objects:"dict[Character]"={}
+scenario_object:"Scenario"=None
+
+
 # ============ Data Model ============
 from dataclasses import dataclass,field
 from typing import Literal
+
+class Current:
+    def __init__(self):
+        self.say_state="disabled"
+        self.character_name=""
+        self.example_dialogue_name=""
+
+current=Current()
 
 @dataclass
 class Character:
@@ -54,7 +63,7 @@ def get_current_dialogue():
 @dataclass
 class Dialogue:
     name:str
-    items:"list[DialogueItem]"=[]
+    items:"list[DialogueItem]"=field(default_factory=list)
     outcome_name:str=""
     outcome_comment:str=""
     def write_dialogue(self,character:Character,content:str):
@@ -66,19 +75,19 @@ class Dialogue:
 
 @dataclass
 class DialogueItem:
+    content:str
     type:"Literal['say','narrate','incident','comment']"
     who:str|None=None
-    content:str
 
 @dataclass
 class Scenario:
     name:str
     summary:str=""
     opening_dialogue:"Dialogue"=None
-    example_dialogues:"dict[str,Dialogue]"={}
+    example_dialogues:"dict[str,Dialogue]"=field(default_factory=dict)
     player_character_name:str="Player"
-    npc_character_names:"list[str]"=[]
-    npc_character_frequencies:"dict[str,float]"={}
+    npc_character_names:"list[str]"=field(default_factory=list)
+    npc_character_frequencies:"dict[str,float]"=field(default_factory=dict)
     history:"Dialogue"=None
 
 
