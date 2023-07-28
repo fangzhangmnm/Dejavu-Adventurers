@@ -489,6 +489,8 @@ def purify_ai_response(response_text):
     return response_text
 
 def purity_player_response(response_text):
+    if len(response_text.strip())==0:
+        return "..."
     return response_text # feel free to prompt injection attack here
 
 
@@ -539,9 +541,9 @@ label dejavu_dialogue_loop:
                     runtime.outcome_name=PLAYER_QUIT_OUTCOME_NAME
                 call dejavu_dialogue_loop_finally_block from dejavu_dialogue_loop_label_1
                 jump  expression dejavu.scenario_object.quit_label
-            if len(dejavu.runtime.user_input.strip())>0:
-                python in dejavu:
-                    character_objects[scenario_object.player_character_name](runtime.user_input,no_substitution=True)
+            # if len(dejavu.runtime.user_input.strip())>0:
+            python in dejavu:
+                character_objects[scenario_object.player_character_name](runtime.user_input,no_substitution=True)
         elif dejavu.runtime.character_name in dejavu.scenario_object.npc_character_names:
             # ============ NPC Input ============
             python in dejavu:

@@ -84,8 +84,8 @@ label city_gate:
     incident "Examine Documents" (label="city_gate.examine_documents")
     condition "The guard want to examine the Adventurer's documents."
 
-    incident "Take Item" (label="city_gate.take_item",once=False)
-    condition "The both party made a deal and The guard is going to take an item or money from the Adventurer. And the guard had not received the item yet."
+    incident "Take Bribe" (label="city_gate.take_item",once=True)
+    condition "The both party made a deal and The guard is going to take an item or money from the Adventurer."
 
     enable_quit "Quit" (label="city_gate.quit")
 
@@ -143,7 +143,7 @@ label second_day:
         narrator "Despite failed in persuading the guard, GM decides to let the player enter the city for debug convenience."
 
     narrator_dejavu "After the player entered the city, they are interviewe by the duke of Eldoria. The duke is impressed by the player's knowledge and experience, and he decides to hire the player as a royal advisor. On the second day, the player appeared at the city gate again."
-    
+
     enable_quit "Quit" (label="second_day.quit")
 
     end_scenario ""
