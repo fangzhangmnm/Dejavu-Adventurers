@@ -156,9 +156,6 @@ define config.window_icon = "gui/window_icon.png"
 
 
 
-define gui.text_size = 32
-define config.log="debug_log.txt"
-
 ## Build configuration #########################################################
 ##
 ## This section controls how Ren'Py turns your project into distribution files.
@@ -213,3 +210,20 @@ init python:
 ## by a slash.
 
 # define build.itch_project = "renpytom/test-project"
+
+
+
+
+
+# My Place
+
+define gui.text_font = "ChillBitmap7x.ttf"
+define gui.name_text_font = "ChillBitmap7x.ttf"
+define gui.interface_text_font = "ChillBitmap7x.ttf"
+
+define gui.text_size = 32
+define gui.name_text_size = 48
+define gui.interface_text_size = 32
+
+
+define config.log="debug_log.txt"

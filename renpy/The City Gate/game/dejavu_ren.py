@@ -23,6 +23,12 @@ class EnhancedJSONEncoder(json.JSONEncoder):
             return "<non-serializable object>"
             # return super().default(o)
 
+def is_str_number(str_or_obj):
+    if isinstance(str_or_obj,(int,float)):
+        return True
+    elif isinstance(str_or_obj,str):
+        return str_or_obj.isnumeric()
+    
 def log_object(json_object):
     for line in json.dumps(json_object,indent=4,cls=EnhancedJSONEncoder).split("\n"):
         renpy.log(line)
@@ -67,6 +73,13 @@ class Current:
         self.user_input=""
     
 current=Current()
+
+class CharacterAlias:
+    def __init__(self,name):
+        self.name=name
+    def __call__(self,what,silence=False,no_substitution=False,*args,**kwargs):
+        character=character_objects[self.name]
+        character(what,silence=silence,no_substitution=no_substitution,*args,**kwargs)
 
 @dataclass
 class DejavuCharacter:
@@ -331,7 +344,7 @@ def character(name,is_player=False,*args,**kwargs):
             is_player=is_player,
             renpy_character=renpy_character,
             )
-    return character_objects[name]
+    return CharacterAlias(name)
 
 @dsl_register
 def AICharacter(name,*args,**kwargs):
@@ -368,21 +381,24 @@ def summary(what,*args,**kwargs):
     scenario_object.summary=what
 
 @dsl_register
-def characters(character_list):
+def characters(what="",list=[],*args,**kwargs):
     """character_list: [Player,"Aqua",2.0,Guard,Darkness]"""
+    if list==[]:
+        list=what.replace("，",",").split(",")
+        list=[x.strip() for x in list]
     i=0
-    while i<len(character_list):
-        name_or_object=character_list[i]
+    while i<len(list):
+        name_or_object=list[i]
         i+=1
         if isinstance(name_or_object,str):
             character_object=character_objects[name_or_object]
-        elif isinstance(name_or_object,DejavuCharacter):
-            character_object=name_or_object
+        elif isinstance(name_or_object,(DejavuCharacter,CharacterAlias)):
+            character_object=character_objects[name_or_object.name]
         else:
             raise Exception("Invalid character_list")
         frequency=1.0 if not character_object.is_player else 0 # the default frequency of player is calculated later as the sum of all non-player characters
-        if i<len(character_list) and isinstance(character_list[i],(int,float)):
-            frequency=character_list[i]
+        if i<len(list) and is_str_number(list[i]):
+            frequency=list[i]
             i+=1
         if character_object.is_player:
             scenario_object.player_character_name=character_object.name
@@ -420,7 +436,7 @@ def jump_outcome(name,comment="",*args,**kwargs):
 def str_or_obj_to_name(str_or_obj):
     if isinstance(str_or_obj,str):
         return str_or_obj
-    elif isinstance(str_or_obj,DejavuCharacter):
+    elif isinstance(str_or_obj,(DejavuCharacter,CharacterAlias)):
         return str_or_obj.name
     else:
         raise Exception("Invalid argument")

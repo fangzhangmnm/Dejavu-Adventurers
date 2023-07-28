@@ -20,7 +20,7 @@ label city_gate:
     scenario "Guard Challenge"
     summary "The Adventurer attempts to enter the city, but being rejected by the city guard. The guard must be unreasonable and is very hard to persuade. The Adventurer have to either bribe the guard, use persuasion, intimidation or deception to enter the city, but neither of them is easy."
 
-    $ characters([Guard,Aqua,Adventurer])
+    characters "Captain Galen, Adventurer, Aqua"
 
     opening_dialogue "Opening"
 
@@ -150,8 +150,6 @@ label second_day:
 
 
     jump dejavu_dialogue_loop
-
-    return
 
 label .quit:
     "Game End"
