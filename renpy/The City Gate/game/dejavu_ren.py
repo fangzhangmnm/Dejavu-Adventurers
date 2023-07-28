@@ -1,11 +1,11 @@
 renpy=object()
 
-character_objects={}
-scenario_objects={}
+character_objects:"dict[Character]"={}
+scenario_object:"Scenario"=None
 current=object()
 """renpy
 default dejavu.character_objects={}
-default dejavu.scenario_objects={}
+default dejavu.scenario_object=None
 default dejavu.current=object()
 
 
@@ -13,135 +13,73 @@ init python in dejavu:
 """
 
 # ============ Data Model ============
+from dataclasses import dataclass,field
+from typing import Literal
 
-        
+@dataclass
 class Character:
-    @classmethod
-    def get(cls,name)->"Character":
-        return character_objects[name]
-    @classmethod
-    def get_current(cls)->"Character":
-        return character_objects[current.character]
-    @classmethod
-    def set_current(cls,name,*args,**kwargs)->"Character":
-        current.character=name
-        if name not in character_objects:
-            character_objects[name]=Character(name,*args,**kwargs)
-        return character_objects[name]
-    
-    def __init__(self,name,is_player=False,*args,**kwargs):
-        self.name=name
-        self.is_player=is_player
-        self.personality=""
-        self.bio=""
-        self.diaries=[]
-        self.renpy_character=renpy.store.Character(name,*args,**kwargs)
-    def __call__(self,what,*args,**kwargs):
-        dispatch_say(self.name,what,*args,**kwargs)
-    def add_diary(self,diary_text):
-        self.diaries.append(diary_text)
+    name:str
+    is_player:bool=False
+    is_narrator:bool=False
+    personality:str=""
+    bio:str=""
+    diaries:"list[str]"=field(default_factory=list)
+    renpy_character:object=None
+    def __call__(self,what,silence=False,no_substitution=False,*args,**kwargs):
+        if not no_substitution:
+            what=renpy.substitute(what)
+        if current.say_state=="disabled":
+            if not silence: self.renpy_character(what,*args,**kwargs)
+        elif current.say_state=="opening_dialogue":
+            get_current_dialogue().write_dialogue(self,what)
+            if not silence: self.renpy_character(what,*args,**kwargs)
+        elif current.say_state=="example_dialogue":
+            get_current_dialogue().write_dialogue(self,what)
+        elif current.say_state=="playing":
+            get_current_dialogue().write_dialogue(self,what)
+            if not silence: self.renpy_character(what,*args,**kwargs)
 
-def dispatch_say(who,what,*args,**kwargs):
-    who_name=who.name if isinstance(who,Character) else who
-    if who_name is None:
-        renpy_character=renpy.store.narrator
-    else:
-        renpy_character=Character.get(who_name).renpy_character
-    if current.say_state=="disabled":
-        renpy_character(what,*args,**kwargs)
-    elif current.say_state=="opening_dialogue":
-        Dialogue.get_current().add_dialogue_or_narrate(who_name,what)
-        renpy_character(what,*args,**kwargs)
+narrator=Character(name="Narrator",is_narrator=True)
+
+def get_current_dialogue():
+    if current.say_state=="opening_dialogue":
+        return scenario_object.opening_dialogue
     elif current.say_state=="example_dialogue":
-        Dialogue.get_current().add_dialogue_or_narrate(who_name,what)
+        return scenario_object.example_dialogues[current.example_dialogue_name]
     elif current.say_state=="playing":
-        Dialogue.get_current().add_dialogue_or_narrate(who_name,what)
-        renpy_character(what,*args,**kwargs)
+        return scenario_object.history
+    else:
+        assert False
 
-
-class Scenario:
-    @classmethod
-    def get_current(cls)->"Scenario":
-        return scenario_objects[current.scenario]
-    @classmethod
-    def set_current(cls,name)->"Scenario":
-        current.scenario=name
-        if name not in scenario_objects:
-            scenario_objects[name]=Scenario(name)
-        return scenario_objects[name]
-    def __init__(self,name):
-        self.name=name
-        self.summary=""
-        self.player_character_name=""
-        self.npc_character_names=[]
-        self.npc_say_frequencies={}
-        self.opening_dialogue=None
-        self.example_dialogues={}
-        self.outcomes={}
-    def add_character(self,name_or_object,frequency=1.0):
-        name=name_or_object.name if isinstance(name_or_object,Character) else name_or_object
-        character_object=Character.get(name)
-        if character_object.is_player:
-            self.player_character_name=name
-        else:
-            self.npc_character_names.append(name)
-            self.npc_say_frequencies[name]=frequency
-    def set_current_opening_dialogue(self,dialogue_name):
-        current.say_state="opening_dialogue"
-        current.dialogue_parent="scenario"
-        self.opening_dialogue=self.opening_dialogue or Dialogue(dialogue_name)
-        self.current_dialogue=self.opening_dialogue
-        return self.opening_dialogue
-    def set_current_example_dialogue(self,dialogue_name):
-        current.say_state="example_dialogue"
-        current.dialogue_parent="scenario"
-        if dialogue_name not in self.example_dialogues:
-            self.example_dialogues[dialogue_name]=Dialogue(dialogue_name)
-        self.current_dialogue=self.example_dialogues[dialogue_name]
-        return self.example_dialogues[dialogue_name]
-    def get_current_dialogue(self)->"Dialogue":
-        return self.current_dialogue
-    def set_current_outcome(self,outcome_name,label=None,type='outcome',once=False):
-        self.outcomes[outcome_name]=Outcome(outcome_name,label=label,type=type,once=once)
-        return self.outcomes[outcome_name]
-    def get_current_outcome(self)->"Outcome":
-        return self.current_outcome
-    
-class Outcome:
-    def __init__(self,name,label=None,type='outcome',once=False):
-        self.name=name
-        self.label=label or name
-        self.type=type
-        self.once=once
-        self.condition=""
-
-
-
-
+@dataclass
 class Dialogue:
-    @classmethod
-    def get_current(cls):
-        if current.dialogue_parent=="scenario":
-            return Scenario.get_current().get_current_dialogue()
-        elif current.dialogue_parent=="history":
-            raise NotImplementedError
-    def __init__(self,name):
-        self.name=name
-        self.items=[]
-        self.outcome=None
-        self.outcome_comment=""
-    def add_dialogue_or_narrate(self,who,what):
-        who_name=who.name if isinstance(who,Character) else who
-        if who is None:
-            self.items.append({"type":"narrate","what":what})
+    name:str
+    items:"list[DialogueItem]"=[]
+    outcome_name:str=""
+    outcome_comment:str=""
+    def write_dialogue(self,character:Character,content:str):
+        assert isinstance(character,Character)
+        if character.is_narrator:
+            self.items.append(DialogueItem(type="narrate",content=content))
         else:
-            self.items.append({"type":"dialogue","who":who,"what":what})
-    def add_incident(self,name,comment=""):
-        self.items.append({"type":"incident","name":name,"comment":comment})
-    def set_outcome(self,name,comment=""):
-        self.outcome=name
-        self.outcome_comment=comment
+            self.items.append(DialogueItem(type="say",who=character.name,content=content))
 
+@dataclass
+class DialogueItem:
+    type:"Literal['say','narrate','incident','comment']"
+    who:str|None=None
+    content:str
+
+@dataclass
+class Scenario:
+    name:str
+    summary:str=""
+    opening_dialogue:"Dialogue"=None
+    example_dialogues:"dict[str,Dialogue]"={}
+    player_character_name:str="Player"
+    npc_character_names:"list[str]"=[]
+    npc_character_frequencies:"dict[str,float]"={}
+    history:"Dialogue"=None
 
 
 # ============ Domain Specific Language ============
@@ -151,34 +89,46 @@ def dsl_register(func):
     _dsl_injection_list[func.__name__]=func
     return func
 
+def character(name,is_player=False,*args,**kwargs):
+    current.character_name=name
+    if name not in character_objects:
+        renpy_character=renpy.store.Character(name,*args,**kwargs)
+        character_objects[name]=Character(
+            name=name,
+            is_player=is_player,
+            renpy_character=renpy_character,
+            )
+    return character_objects[name]
+
 @dsl_register
 def AICharacter(name,*args,**kwargs):
-    return Character.set_current(name,*args,**kwargs)
+    return character(name,*args,**kwargs)
 
 @dsl_register
 def PlayerCharacter(name,*args,**kwargs):
-    return Character.set_current(name,is_player=True,*args,**kwargs)
+    return character(name,is_player=True,*args,**kwargs)
 
 @dsl_register
 def personality(what,*args,**kwargs):
-    Character.get_current().personality=what
+    character_objects[current.character_name].personality=what
 
 @dsl_register
 def bio(what,*args,**kwargs):
-    Character.get_current().bio=what
+    character_objects[current.character_name].bio=what
 
 @dsl_register
 def scenario(name,*args,**kwargs):
-    return Scenario.set_current(name)
+    global scenario_object
+    assert current.say_state=="disabled", "You can't start a new scenario in the middle of a ai_game_loop."
+    scenario_object=Scenario(name=name,*args,**kwargs)
 
 @dsl_register
 def end_scenario(*args,**kwargs):
-    global state
-    state="disabled"
+    current.say_state="disabled"
 
 @dsl_register
 def summary(what,*args,**kwargs):
-    Scenario.get_current().summary=what
+    scenario_object.summary=what
 
 @dsl_register
 def characters(character_list):
@@ -187,38 +137,50 @@ def characters(character_list):
     while i<len(character_list):
         name_or_object=character_list[i]
         i+=1
+        if isinstance(name_or_object,str):
+            character_object=character_objects[name_or_object]
+        elif isinstance(name_or_object,Character):
+            character_object=name_or_object
+        else:
+            raise Exception("Invalid character_list")
         frequency=1.0
         if i<len(character_list) and isinstance(character_list[i],(int,float)):
             frequency=character_list[i]
             i+=1
-        Scenario.get_current().add_character(name_or_object,frequency)
+        if character_object.is_player:
+            scenario_object.player_character_name=character_object.name
+        else:
+            scenario_object.npc_character_names.append(character_object.name)
+            scenario_object.npc_character_frequencies[character_object.name]=frequency
 
 @dsl_register
 def opening_dialogue(dialogue_name="Opening",*args,**kwargs):
-    return Scenario.get_current().set_current_opening_dialogue(dialogue_name)
+    scenario_object.opening_dialogue=Dialogue(name=dialogue_name)
+    current.say_state="opening_dialogue"
+
 
 @dsl_register
 def example_dialogue(dialogue_name,*args,**kwargs):
-    return Scenario.get_current().set_current_example_dialogue(dialogue_name)
+    scenario_object.example_dialogues[dialogue_name]=Dialogue(name=dialogue_name)
+    current.say_state="example_dialogue"
+    current.example_dialogue_name=dialogue_name
 
 @dsl_register
 def end_dialogue(*args,**kwargs):
-    global state
-    state="disabled"
+    current.say_state="disabled"
 
 @dsl_register
 def narrator_dejavu(what,*args,**kwargs):
-    dispatch_say(None,what,*args,**kwargs)
+    narrator(what,*args,**kwargs)
 
 @dsl_register
 def call_incident(name,comment="",*args,**kwargs):
-    Dialogue.get_current().add_incident(name,comment)
-
+    get_current_dialogue().items.append(DialogueItem(type="incident",who=name,content=comment))
+    
 @dsl_register
 def jump_outcome(name,comment="",*args,**kwargs):
-    Dialogue.get_current().set_outcome(name,comment)
-
-
+    get_current_dialogue().outcome_name=name
+    get_current_dialogue().outcome_comment=comment
 
 def dsl_injection():
     renpy.store.__dict__.update(_dsl_injection_list)
