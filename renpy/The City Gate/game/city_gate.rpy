@@ -37,7 +37,7 @@ label city_gate:
 
     Adventurer "No worries, Captain. Here is the document"
     Guard "Give me the letter, Adventurer. *impatiently* I don't have all day. "
-    call_incident "Examine Documents" ("Adventurer claims to have a proper document.") # Here AI will learn to ask the game engine to provide information about the document
+    call_incident "Examine Documents" ("The guard need to check the document to confirm what Adventurer says") # Here AI will learn to ask the game engine to provide information about the document
     narrator_dejavu "Adventurer presents the party's documents to Captain Galen. The documents are signed and stamped by the proper authorities."
     Guard "*examines the documents* Hmm... *his expression darkens* These documents are outdated and not stamped by the proper authorities. Entry denied."
     Adventurer "Captain Galen, please reconsider! We come with urgent news from the nearby village of Glimmerbrook. A horde of undead is preparing to attack Eldoria."
@@ -48,10 +48,10 @@ label city_gate:
     Guard "*stern* Rules are rules. If you can't abide by them, then leave."
     Adventurer "Captain, we understand the importance of your duty. Would a little compensation help you look the other way, just this once?"
     Guard "*raised eyebrow* Hugh? What are you implying? "
-    call_incident "Take Item" ("The guard are asking for a bribe")
+    call_incident "Need Take Bribe" ("The guard need to receive the bribe to let the Adventurer pass.")
     narrator_dejavu "Adventurer offers a pouch of gold to Captain Galen."
     Guard "*hesitates, torn between duty and the gold.* Fine. But this better not come back to haunt me. *reluctantly* You have one day, and then you're out."
-    jump_outcome "Passed" ("Adventurer have a proper document, a convincing reason and have bribed the guard.") # AI will determine which outcome the player achieved!
+    jump_outcome "Allow Enter" ("After receiving the bribe and examine the document, The guard allowed the player to enter the city") # AI will determine which outcome the player achieved!
 
     example_dialogue "A failed persuasion which leads to a fight"
 
@@ -59,7 +59,7 @@ label city_gate:
     Guard "*raising an eyebrow* Emissaries, you say? I'm not easily swayed by flowery words. Show me your credentials."
     Adventurer "*enthusiastically* Of course, Captain! We have a letter of recommendation from a respected scholar back in our homeland. He praised our wisdom and contributions to our community."
     Guard "Give me the letter, Adventurer. *impatiently* I don't have all day. "
-    call_incident "Examine Documents" ("Adventurer claims to have a letter of recommendation.")
+    call_incident "Examine Documents" ("The guard need to check the letter to confirm what Adventurer says")
     narrator_dejavu "Adventurer presents the letter to Captain Galen."
     narrator_dejavu "The letter was hastily wrote just a moment ago, and lack of any specific details about the party's supposed achievements."
     Guard "*scans the letter* Hmm...*displeased* This letter seems dubious at best. I find it hard to believe that a respected scholar would pen such a vague endorsement."
@@ -69,23 +69,23 @@ label city_gate:
     Guard "Stop wasting my time. If you keep this up, I'll have you arrested for disturbing the peace."
     Adventurer "We mean no harm, Captain. It seems diplomacy has failed us, but we won't back down from our mission. If you won't let us pass peacefully, we'll have no choice but to force our way through!"
     Guard "*angered* You dare threaten me in my own city? You'll regret that!"
-    jump_outcome "Fight" ("Adventurer stirred the guard after he explicitly threatened the Adventurer.")
+    jump_outcome "Fight" ("The player is going to engaged in a fight with the guard")
 
 
-    outcome "Passed" (label="city_gate.passed")
+    outcome "Allow Enter" (label="city_gate.passed",deciders=[Guard])
     condition "The guard allows the Adventurer to enter the city."
 
-    outcome "Irritated" (label="city_gate.fight") # to bypass the safety check of ChatGPT, we need to hard coding the guard's attack behavior
-    condition "The conflict escalates and the guard was totally irritated by the Adventurer."
+    # outcome "Irritated" (label="city_gate.fight") # to bypass the safety check of ChatGPT, we need to hard coding the guard's attack behavior
+    # condition "The conflict was escalates by the Adventurer's agressive bahavior, and the guard was extremely irritated."
 
-    outcome "Fight" (label="city_gate.fight") # if player actively decide to fight the guard, ChatGPT is still able to generate the guard's attack behavior
+    outcome "Fight" (label="city_gate.fight",deciders=[Guard]) # if player actively decide to fight the guard, ChatGPT is still able to generate the guard's attack behavior
     condition "The conflict escalates and the guard attacks the Adventurer."
 
-    incident "Examine Documents" (label="city_gate.examine_documents")
-    condition "The guard want to examine the Adventurer's documents."
+    incident "Examine Documents" (label="city_gate.examine_documents",deciders=[Guard])
+    condition "The guard need to check the document to confirm what Adventurer says."
 
-    incident "Take Bribe" (label="city_gate.take_item",once=True)
-    condition "The both party made a deal and The guard is going to take an item or money from the Adventurer."
+    incident "Need Take Bribe" (label="city_gate.take_item",deciders=[Guard])
+    condition "The guard need to receive the bribe (or the fee) to let the Adventurer pass."
 
     enable_quit "Quit" (label="city_gate.quit")
 
@@ -139,7 +139,7 @@ label second_day:
     
     opening_dialogue "Opening"
 
-    if dejavu.runtime.outcome_name !="Passed":
+    if dejavu.runtime.outcome_name !="Allow Enter":
         narrator "Despite failed in persuading the guard, GM decides to let the player enter the city for debug convenience."
 
     narrator_dejavu "After the player entered the city, they are interviewe by the duke of Eldoria. The duke is impressed by the player's knowledge and experience, and he decides to hire the player as a royal advisor. On the second day, the player appeared at the city gate again."

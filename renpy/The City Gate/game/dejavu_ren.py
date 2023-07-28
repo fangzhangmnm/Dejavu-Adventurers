@@ -143,8 +143,8 @@ class Scenario:
     quit_label:str="ERROR"
     def get_all_character_names(self):
         return [self.player_character_name]+self.npc_character_names
-    def get_non_expired_outcomes(self):
-        return [outcome for outcome in self.outcomes.values() if not outcome.expired]
+    def get_appliable_outcomes(self,character_name):
+        return [outcome for outcome in self.outcomes.values() if not outcome.expired and (outcome.decider_names==[] or character_name in outcome.decider_names)]
     def get_outcome_label(self,outcome_name):
         if outcome_name not in self.outcomes:
             return "Unknown"
@@ -158,6 +158,7 @@ class Outcome:
     type:"Literal['outcome','incident']"="outcome"
     once:bool=False
     expired:bool=False
+    decider_names:"list[str]"=field(default_factory=list)
     def on_trigger(self):
         if self.once and self.type=="incident":
             self.expired=True
@@ -229,10 +230,10 @@ def compose_roleplay_request(character_name):
     return request
 
 
-def compose_check_outcome_request():
+def compose_check_outcome_request(character_name):
     request=[]
     prompt="Please read the dialogue of a role playing game and determine whether a certain condition is reached.\n\n"
-    for i,outcome in enumerate(scenario_object.get_non_expired_outcomes()):
+    for i,outcome in enumerate(scenario_object.get_appliable_outcomes(character_name)):
         if not outcome.expired:
             if outcome.type=='incident':
                 prompt+="- {outcome_name}: when {condition}, then reply \"your reason, {outcome_name}\"\n".format(condition=outcome.condition,outcome_name=outcome.name)
@@ -289,10 +290,10 @@ def perform_roleplay_query(character_name):
     response=completion_with_log("perform_roleplay_query",request,temperature=0.5)
     return response[-1]["content"]
 
-def perform_check_outcome_query():
-    if len(scenario_object.get_non_expired_outcomes())==0:
+def perform_check_outcome_query(character_name):
+    if len(scenario_object.get_appliable_outcomes(character_name))==0:
         return ONGOING_OUTCOME_NAME, "ongoing", "No outcome defined."
-    request=compose_check_outcome_request()
+    request=compose_check_outcome_request(character_name)
     response=completion_with_log("check_outcome",request,temperature=0)
     response_text=response[-1]["content"]
     if log_level>=1:
@@ -416,23 +417,33 @@ def jump_outcome(name,comment="",*args,**kwargs):
     get_current_dialogue().outcome_comment=comment
 
 
+def str_or_obj_to_name(str_or_obj):
+    if isinstance(str_or_obj,str):
+        return str_or_obj
+    elif isinstance(str_or_obj,DejavuCharacter):
+        return str_or_obj.name
+    else:
+        raise Exception("Invalid argument")
+
 @dsl_register
-def outcome(name,label=None,condition="",*args,**kwargs):
+def outcome(name,label=None,condition="",deciders:list[str]=None,*args,**kwargs):
+    decider_names=[str_or_obj_to_name(decider) for decider in deciders] if deciders else []
     scenario_object.outcomes[name]=Outcome(
         name=name,
         label=label or name,
         condition=condition,
         type="outcome",
+        decider_names=decider_names,
         )
     current.outcome_name=name
     
 @dsl_register
-def incident(name,label=None,once=True,*args,**kwargs):
+def incident(name,label=None,*args,**kwargs):
     scenario_object.outcomes[name]=Outcome(
         name=name,
         label=label or name,
         type="incident",
-        once=once,
+        once=True, # chatgpt will stuck on the same incident even it is triggered. 
         )
     current.outcome_name=name
 
@@ -495,12 +506,19 @@ def purity_player_response(response_text):
 
 
 def write_diaries():
+    diaries={}
     for character_name in scenario_object.npc_character_names:
         diary=perform_summary_query(character_name)
-        character_objects[character_name].diaries.append(diary)
+        diaries[character_name]=diary
         if log_level>=1:
             log("Diary of "+character_name+":")
             log(diary)
+    return diaries
+
+def save_diaries(diaries):
+    for character_name,diary in diaries.items():
+        character_objects[character_name].diaries.append(diary)
+
 
 """renpy
 default dejavu.rollback=dejavu.RollBack()
@@ -557,12 +575,15 @@ label dejavu_dialogue_loop:
                     character_objects[runtime.character_name](runtime.user_input,no_substitution=True)
         # ============ Check Outcome ============
         python in dejavu:
-            runtime.outcome_name=rollback.get()
-            if runtime.outcome_name is None:
-                runtime.outcome_name=perform_check_outcome_query()
-                rollback.set(runtime.outcome_name)
-            runtime.outcome_name,runtime.outcome_type,runtime.outcome_comment=runtime.outcome_name
-            runtime.outcome_label=scenario_object.get_outcome_label(runtime.outcome_name)
+            if runtime.character_name!=scenario_object.player_character_name:
+                runtime.outcome_name=rollback.get()
+                if runtime.outcome_name is None:
+                    runtime.outcome_name=perform_check_outcome_query(runtime.character_name)
+                    rollback.set(runtime.outcome_name)
+                runtime.outcome_name,runtime.outcome_type,runtime.outcome_comment=runtime.outcome_name
+                runtime.outcome_label=scenario_object.get_outcome_label(runtime.outcome_name)
+            else: # dont check outcome before npc finished talking
+                runtime.outcome_type="ongoing"
         if dejavu.runtime.outcome_type=="incident":
             python in dejavu:
                 scenario_object.outcomes[runtime.outcome_name].on_trigger()
@@ -580,8 +601,14 @@ label dejavu_dialogue_loop:
 
 
 label dejavu_dialogue_loop_finally_block:
-    $ dejavu.current.say_state="disabled"
-    $ dejavu.write_diaries()
+    python in dejavu:
+        # still need rollback here
+        runtime.summarized_diaries=rollback.get()
+        if runtime.summarized_diaries is None:
+            runtime.summarized_diaries=write_diaries()
+            rollback.set(runtime.summarized_diaries)
+        save_diaries(runtime.summarized_diaries)
+        current.say_state="disabled"
     return
 
 
